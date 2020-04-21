@@ -1,7 +1,7 @@
 'use strict'
 
 const db = require('../server/db')
-const {User, Product} = require('../server/db/models')
+const {User, Product, Order} = require('../server/db/models')
 const faker = require('faker')
 
 async function seed() {
@@ -25,6 +25,14 @@ async function seed() {
       imageUrl: faker.image.food(),
       price: faker.random.number(),
       category: faker.random.word()
+    })
+    await Order.create({
+      items: [
+        faker.random.number(),
+        faker.random.number(),
+        faker.random.number()
+      ],
+      value: faker.random.number()
     })
   }
 
