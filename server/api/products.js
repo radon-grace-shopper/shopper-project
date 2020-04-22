@@ -14,6 +14,7 @@ router.get('/', async (req, res, next) => {
 
 router.get('/:id', async (req, res, next) => {
   try {
+    console.log(req.params)
     console.log('hitting the get single product route')
     const product = await Product.findByPk(req.params.id, {include: Review})
     res.json(product)
