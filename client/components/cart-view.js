@@ -11,4 +11,10 @@ class CartView extends Component {
   }
 }
 
-export default connect()(CartView)
+const mapState = state => ({
+  user: state.user
+})
+
+const mapDispatch = dispatch => ({})
+
+export default connect(mapState, mapDispatch)(CartView)
