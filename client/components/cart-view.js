@@ -1,40 +1,46 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import axios from 'axios'
+import {deleteOrder, getOrders, updateQuantity} from '../store/cart'
 
 class CartView extends Component {
-  constructor() {
-    super()
-    this.state = {
-      cart: []
-    }
-  }
-
-  async componentDidMount() {
-    const {data} = await axios.get(`/api/orders/${this.props.user.id}`)
-    this.setState({cart: data})
+  componentDidMount() {
+    this.props.getOrders(this.props.user.id)
   }
 
   render() {
     return (
       <div>
-        {this.state.cart.map(order => {
-          console.log(order)
+        {this.props.cart.map(order => {
           return (
             <div key={order.id}>
               {order.products.map(product => (
                 <div key={product.id}>
-                  Name: {product.name}
+                  <h2>Name: {product.name}</h2>
+                  <p>Description:{product.description}</p>
+                  <img className="defaultIceCream" src={product.imageUrl} />
                   <br />
-                  Description:{product.description}
+                  <a>Single Price: {product.price}</a>
+                  <label htmlFor="quantity">Quantity:</label>
+                  <input
+                    type="number"
+                    id="quantity"
+                    value={product.orderProduct.quantity}
+                    onChange={() =>
+                      this.props.updateQuantity(product.orderProduct)
+                    }
+                  />
                   <br />
-                  <img src={product.imageUrl} />
+                  <a>
+                    Total Price: {product.orderProduct.quantity * product.price}
+                  </a>
                   <br />
-                  Single Price: {product.price}
-                  <br />
-                  Quantity: {product.orderProduct.quantity}
-                  <br />
-                  Total Price: {product.orderProduct.quantity * product.price}
+                  <button
+                    type="button"
+                    onClick={() => this.props.deleteOrder(order)}
+                  >
+                    Remove
+                  </button>
+                  <hr />
                 </div>
               ))}
             </div>
@@ -46,7 +52,15 @@ class CartView extends Component {
 }
 
 const mapState = state => ({
-  user: state.user
+  user: state.user,
+  cart: state.cart
 })
 
-export default connect(mapState, null)(CartView)
+const mapDispatch = dispatch => ({
+  deleteOrder: order => dispatch(deleteOrder(order)),
+  getOrders: id => dispatch(getOrders(id)),
+  updateQuantity: (orderProduct, quantity) =>
+    dispatch(updateQuantity(orderProduct, quantity))
+})
+
+export default connect(mapState, mapDispatch)(CartView)
