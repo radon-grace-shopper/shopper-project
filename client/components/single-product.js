@@ -16,7 +16,6 @@ class singleProduct extends React.Component {
 
   componentDidMount() {
     const productId = this.props.match.params.productId
-    console.log('Product ID', productId)
     this.props.loadProduct(productId)
   }
 
@@ -57,8 +56,6 @@ class singleProduct extends React.Component {
   //To do: add to cart button should add item to cart but updating user's order and setting it to cart status
 
   render() {
-    // console.log('Here are the Props', this.props)
-
     if (!this.props.product.name) {
       return <h2>Loading...</h2>
     }
