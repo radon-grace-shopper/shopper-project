@@ -1,18 +1,44 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {getOrders} from '../store/cart'
+import axios from 'axios'
 
 class CartView extends Component {
-  componentDidMount() {
-    this.props.getOrders(this.props.user.id)
+  constructor() {
+    super()
+    this.state = {
+      cart: []
+    }
+  }
+
+  async componentDidMount() {
+    const {data} = await axios.get(`/api/orders/${this.props.user.id}`)
+    this.setState({cart: data})
   }
 
   render() {
-    console.log('CART', this.props.cart)
     return (
       <div>
-        {this.props.cart.map(order => {
-          return <div key={order.id}>{order}</div>
+        {this.state.cart.map(order => {
+          console.log(order)
+          return (
+            <div key={order.id}>
+              {order.products.map(product => (
+                <div key={product.id}>
+                  Name: {product.name}
+                  <br />
+                  Description:{product.description}
+                  <br />
+                  <img src={product.imageUrl} />
+                  <br />
+                  Single Price: {product.price}
+                  <br />
+                  Quantity: {product.orderProduct.quantity}
+                  <br />
+                  Total Price: {product.orderProduct.quantity * product.price}
+                </div>
+              ))}
+            </div>
+          )
         })}
       </div>
     )
@@ -20,12 +46,7 @@ class CartView extends Component {
 }
 
 const mapState = state => ({
-  user: state.user,
-  cart: state.cart
+  user: state.user
 })
 
-const mapDispatch = dispatch => ({
-  getOrders: id => dispatch(getOrders(id))
-})
-
-export default connect(mapState, mapDispatch)(CartView)
+export default connect(mapState, null)(CartView)
