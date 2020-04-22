@@ -1,7 +1,7 @@
 'use strict'
 
 const db = require('../server/db')
-const {User, Product, Order} = require('../server/db/models')
+const {User, Product, Order, Review} = require('../server/db/models')
 const faker = require('faker')
 
 async function seed() {
@@ -28,6 +28,19 @@ async function seed() {
 
   user.setOrders(order)
   product.setOrders([order], {through: {quantity: 50}})
+
+  await Review.bulkCreate([
+    {
+      content: 'This product is awesome. Would totally buy it again.',
+      rating: 5
+    },
+    {
+      content:
+        "I don't know what that other review is talking about?! This tastes gross",
+      rating: 0
+    },
+    {content: 'It was so-so', rating: 3}
+  ])
 
   for (let i = 0; i < 100; i++) {
     await User.create({
