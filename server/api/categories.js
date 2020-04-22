@@ -9,8 +9,6 @@ had been selected. we may not need to obtain data that is separated in this way,
 
 router.get('/:categories/products', async (req, res, next) => {
   try {
-    console.log('hitting the get products in a category route')
-    console.log(req.params)
     const products = await Product.findAll({
       where: {
         category: req.params.categories

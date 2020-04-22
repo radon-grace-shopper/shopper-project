@@ -8,10 +8,22 @@ class CartView extends Component {
     this.state = {
       cart: []
     }
+    this.deleteOrder = this.deleteOrder.bind(this)
+  }
+
+  async deleteOrder(removedOrder) {
+    removedOrder.status = 'completed'
+    const newOrder = await axios.put(
+      `/api/orders/${removedOrder.id}`,
+      removedOrder
+    )
+    this.setState(prevState => ({
+      cart: prevState.cart.filter(order => order.id !== removedOrder.id)
+    }))
   }
 
   async componentDidMount() {
-    const {data} = await axios.get(`/api/orders/${this.props.user.id}`)
+    const {data} = await axios.get(`/api/orders/user/${this.props.user.id}`)
     this.setState({cart: data})
   }
 
@@ -19,22 +31,26 @@ class CartView extends Component {
     return (
       <div>
         {this.state.cart.map(order => {
-          console.log(order)
           return (
             <div key={order.id}>
               {order.products.map(product => (
                 <div key={product.id}>
-                  Name: {product.name}
+                  <h2>Name: {product.name}</h2>
+                  <p>Description:{product.description}</p>
+                  <img className="defaultIceCream" src={product.imageUrl} />
                   <br />
-                  Description:{product.description}
+                  <a>Single Price: {product.price}</a>
                   <br />
-                  <img src={product.imageUrl} />
+                  <a>Quantity: {product.orderProduct.quantity}</a>
                   <br />
-                  Single Price: {product.price}
+                  <a>
+                    Total Price: {product.orderProduct.quantity * product.price}
+                  </a>
                   <br />
-                  Quantity: {product.orderProduct.quantity}
-                  <br />
-                  Total Price: {product.orderProduct.quantity * product.price}
+                  <button type="button" onClick={() => this.deleteOrder(order)}>
+                    Remove
+                  </button>
+                  <hr />
                 </div>
               ))}
             </div>
