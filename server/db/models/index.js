@@ -7,6 +7,7 @@ const orderProducts = require('./orderProducts')
 User.hasMany(Order)
 Order.belongsTo(User)
 
+Order.belongsToMany(Product, {through: orderProducts})
 Product.belongsToMany(Order, {through: orderProducts})
 Order.belongsToMany(Product, {through: orderProducts})
 
