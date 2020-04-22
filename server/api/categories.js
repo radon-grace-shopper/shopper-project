@@ -7,8 +7,6 @@ and one product could be obtained regardless of whether a category
 had been selected. we may not need to obtain data that is separated in this way, so this route may be extraneous
 */
 
-console.log('hitting the category route')
-
 router.get('/:categories/products', async (req, res, next) => {
   try {
     console.log('hitting the get products in a category route')
