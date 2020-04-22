@@ -15,6 +15,7 @@ const setOrders = orders => ({
 //THUNK CREATOR
 export const getOrders = id => async dispatch => {
   try {
+    console.log('get orders ran')
     const {data} = await axios.get(`/api/orders/${id}`)
     dispatch(setOrders(data))
   } catch (err) {
