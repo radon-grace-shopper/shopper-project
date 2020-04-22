@@ -5,7 +5,6 @@ module.exports = router
 //possible admin/engineer route route
 router.get('/', async (req, res, next) => {
   try {
-    console.log('hitting the get all orders route')
     const orders = await Order.findAll()
     res.json(orders)
   } catch (err) {
@@ -15,8 +14,6 @@ router.get('/', async (req, res, next) => {
 
 router.get('/:id', async (req, res, next) => {
   try {
-    console.log(req.params)
-    console.log('hitting the get single order route')
     const order = await Order.findByPk(req.params.id, {include: Product})
     res.json(order)
   } catch (err) {
@@ -24,9 +21,20 @@ router.get('/:id', async (req, res, next) => {
   }
 })
 
+router.get('/user/:userId', async (req, res, next) => {
+  try {
+    const orders = await Order.findAll({
+      where: {userId: req.params.userId, status: 'cart'},
+      include: Product
+    })
+    res.json(orders)
+  } catch (err) {
+    next(err)
+  }
+})
+
 router.put('/:id', async (req, res, next) => {
   try {
-    console.log('hitting the update single order route')
     const updatedOrder = await Order.update(req.body, {
       where: {
         id: req.params.id
@@ -54,6 +62,6 @@ router.delete('/:id', async (req, res, next) => {
 
 /*
   will need to use session data to setup User order routes.
-  given a session with a certain user ID, we will want to 
+  given a session with a certain user ID, we will want to
   be able to lookup all orders associated with that userID
   */
