@@ -2,8 +2,7 @@ const Sequelize = require('sequelize')
 const db = require('../db')
 
 const Order = db.define('order', {
-  items: Sequelize.ARRAY(Sequelize.INTEGER),
-  value: Sequelize.INTEGER
+  status: Sequelize.ENUM('cart', 'completed')
 })
 
 module.exports = Order
