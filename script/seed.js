@@ -38,7 +38,7 @@ async function seed() {
     await Product.create({
       name: faker.commerce.productName(),
       description: faker.lorem.paragraph(),
-      imageUrl: faker.image.food(),
+      // imageUrl: faker.image.food(),
       price: faker.commerce.price(),
       category: 'ice cream'
     })
