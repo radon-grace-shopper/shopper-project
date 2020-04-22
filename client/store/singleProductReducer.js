@@ -1,4 +1,4 @@
-import axois from 'axois'
+import axios from 'axios'
 
 const GET_PRODUCT = 'GET_PRODUCT'
 
@@ -12,7 +12,7 @@ const getProduct = product => {
 export const fetchProduct = id => {
   return async dispatch => {
     try {
-      const {data} = await axois.get(`/api/products/${id}`)
+      const {data} = await axios.get(`/api/products/${id}`)
       dispatch(getProduct(data))
     } catch (error) {
       console.log('Error retreiving single product', error)
