@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const {Order} = require('../db/models')
+const {Order, Product} = require('../db/models')
 module.exports = router
 
 //possible admin/engineer route route
@@ -17,7 +17,7 @@ router.get('/:id', async (req, res, next) => {
   try {
     console.log(req.params)
     console.log('hitting the get single order route')
-    const order = await Order.findByPk(req.params.id)
+    const order = await Order.findByPk(req.params.id, {include: Product})
     res.json(order)
   } catch (err) {
     next(err)
