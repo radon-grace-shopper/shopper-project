@@ -3,7 +3,9 @@ import {connect} from 'react-redux'
 import {fetchProducts} from '../store/allProductsReducer'
 
 class allProducts extends Component {
-  componentDidMount() {}
+  componentDidMount() {
+    this.props.getProducts()
+  }
   render() {
     if (this.props.products) {
       return <h2>Loading...</h2>
@@ -22,3 +24,17 @@ class allProducts extends Component {
     )
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    products: state.products
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    getProducts: () => dispatch(fetchProducts())
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(allProducts)
