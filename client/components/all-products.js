@@ -7,7 +7,8 @@ class allProducts extends Component {
     this.props.getProducts()
   }
   render() {
-    if (this.props.products) {
+    console.log('these are the products on props', this.props.products)
+    if (this.props.products.length === 0) {
       return <h2>Loading...</h2>
     }
     return (

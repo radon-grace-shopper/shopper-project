@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const GET_PRODUCTS = 'GET_PRODUCT'
+const GET_PRODUCTS = 'GET_PRODUCTS'
 
 const getProducts = products => {
   return {
