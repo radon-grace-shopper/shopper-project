@@ -11,20 +11,25 @@ const Product = db.define('product', {
     allowNull: false
   },
   price: {
-    type: Sequelize.FLOAT,
+    type: Sequelize.DECIMAL(10, 2),
     allowNull: false
   },
   inventory: {
     type: Sequelize.INTEGER,
-    defaultValue: 0
+    defaultValue: 0,
+    validate: {
+      min: 0
+    }
   },
   category: {
-    type: Sequelize.STRING,
-    allowNull: false
+    type: Sequelize.ENUM('ice cream', 'healthy', 'dairy-free')
   },
   imageUrl: {
     type: Sequelize.STRING,
-    defaultValue: 'photo'
+    defaultValue: 'https://i.ytimg.com/vi/dm0yVgG8Pa0/maxresdefault.jpg',
+    validate: {
+      isUrl: true
+    }
   }
 })
 
