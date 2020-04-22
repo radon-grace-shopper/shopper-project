@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {deleteOrder, getOrders} from '../store/cart'
+import {deleteOrder, getOrders, updateQuantity} from '../store/cart'
 
 class CartView extends Component {
   componentDidMount() {
@@ -8,7 +8,6 @@ class CartView extends Component {
   }
 
   render() {
-    console.log(this.props)
     return (
       <div>
         {this.props.cart.map(order => {
@@ -21,8 +20,15 @@ class CartView extends Component {
                   <img className="defaultIceCream" src={product.imageUrl} />
                   <br />
                   <a>Single Price: {product.price}</a>
-                  <br />
-                  <a>Quantity: {product.orderProduct.quantity}</a>
+                  <label htmlFor="quantity">Quantity:</label>
+                  <input
+                    type="number"
+                    id="quantity"
+                    value={product.orderProduct.quantity}
+                    onChange={() =>
+                      this.props.updateQuantity(product.orderProduct)
+                    }
+                  />
                   <br />
                   <a>
                     Total Price: {product.orderProduct.quantity * product.price}
@@ -30,7 +36,7 @@ class CartView extends Component {
                   <br />
                   <button
                     type="button"
-                    onClick={() => this.props.deleteOrder(order.id)}
+                    onClick={() => this.props.deleteOrder(order)}
                   >
                     Remove
                   </button>
@@ -51,8 +57,10 @@ const mapState = state => ({
 })
 
 const mapDispatch = dispatch => ({
-  deleteOrder: id => dispatch(deleteOrder(id)),
-  getOrders: id => dispatch(getOrders(id))
+  deleteOrder: order => dispatch(deleteOrder(order)),
+  getOrders: id => dispatch(getOrders(id)),
+  updateQuantity: (orderProduct, quantity) =>
+    dispatch(updateQuantity(orderProduct, quantity))
 })
 
 export default connect(mapState, mapDispatch)(CartView)
