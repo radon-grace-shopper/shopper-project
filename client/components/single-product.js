@@ -1,12 +1,14 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {fetchProduct} from '../store/singleProductReducer'
+import axios from 'axios'
 
 class singleProduct extends React.Component {
   constructor() {
     super()
     this.state = {
-      review: ''
+      content: '',
+      rating: 0
     }
     this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -18,23 +20,44 @@ class singleProduct extends React.Component {
     this.props.loadProduct(productId)
   }
 
-  handleSubmit(event) {
-    event.preventDefault()
-    console.log('Submitting review', this.state.review)
-    //will make a PUT (update) request to add to db
+  async handleSubmit(event) {
+    try {
+      event.preventDefault()
+      // console.log('Submitting review', this.state.content, this.state.rating)
+      //Creating new review
+      let content = this.state.content
+      let rating = this.state.rating
+      const productId = this.props.match.params.productId
+      const newReview = {
+        content,
+        rating,
+        productId
+        //To do: userId add in later
+      }
+      const {data} = await axios.post('/api/reviews', newReview)
+      // console.log('Confirming posted review', data)
+
+      this.props.loadProduct(productId)
+      this.setState({
+        content: '',
+        rating: 0
+      })
+    } catch (error) {
+      console.log('Error Submitting new review', error)
+    }
   }
 
   handleChange(event) {
     this.setState({
-      review: event.target.value
+      [event.target.name]: event.target.value
     })
+    // console.log('THE CURRENT STATE', this.state)
   }
-  //For review: will need an onChange & onSubmit
   //To do: add button to add item to cart
   //To do: add to cart button should add item to cart but updating user's order and setting it to cart status
 
   render() {
-    console.log('Here are the Props', this.props)
+    // console.log('Here are the Props', this.props)
 
     if (!this.props.product.name) {
       return <h2>Loading...</h2>
@@ -51,14 +74,23 @@ class singleProduct extends React.Component {
         <div>
           <h3>Reviews</h3>
           <form onSubmit={this.handleSubmit}>
-            <label htmlFor="addReview">Add a review</label>
+            <label htmlFor="content">Add a review</label>
             <input
-              name="addReview"
+              name="content"
               type="text"
               placeholder="What's your review?"
               onChange={this.handleChange}
-              value={this.state.review}
+              value={this.state.content}
             />
+            <label htmlFor="rating">Rating:</label>
+            <select name="rating" onChange={this.handleChange}>
+              <option value={0}>0</option>
+              <option value={1}>1</option>
+              <option value={2}>2</option>
+              <option value={3}>3</option>
+              <option value={4}>4</option>
+              <option value={5}>5</option>
+            </select>
             <button type="submit">Submit Review</button>
           </form>
           <br />
