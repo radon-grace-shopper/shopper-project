@@ -22,7 +22,6 @@ class singleProduct extends React.Component {
   async handleSubmit(event) {
     try {
       event.preventDefault()
-      // console.log('Submitting review', this.state.content, this.state.rating)
       //Creating new review
       let content = this.state.content
       let rating = this.state.rating
@@ -33,8 +32,7 @@ class singleProduct extends React.Component {
         productId
         //To do: userId add in later
       }
-      const {data} = await axios.post('/api/reviews', newReview)
-      // console.log('Confirming posted review', data)
+      await axios.post('/api/reviews', newReview)
 
       this.props.loadProduct(productId)
       this.setState({
@@ -50,12 +48,12 @@ class singleProduct extends React.Component {
     this.setState({
       [event.target.name]: event.target.value
     })
-    // console.log('THE CURRENT STATE', this.state)
   }
   //To do: add button to add item to cart
   //To do: add to cart button should add item to cart but updating user's order and setting it to cart status
 
   render() {
+    console.log('Props', this.props)
     if (!this.props.product.name) {
       return <h2>Loading...</h2>
     }
@@ -95,7 +93,7 @@ class singleProduct extends React.Component {
             {this.props.product.reviews.length >= 1 ? (
               this.props.product.reviews.map(review => (
                 <div key={review.id}>
-                  <div>Reviewed by:{review.userId}...how to access email?</div>
+                  <div>Reviewed by: {review.user.email}</div>
                   <div>Rating: {review.rating}/5</div>
                   <div>{review.content}</div>
                   <br />
