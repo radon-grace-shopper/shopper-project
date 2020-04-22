@@ -1,18 +1,59 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {fetchProduct} from '../store/singleProductReducer'
+import axios from 'axios'
 
 class singleProduct extends React.Component {
-  // constructor(){
-  //   super()
-  // }
+  constructor() {
+    super()
+    this.state = {
+      content: '',
+      rating: 0
+    }
+    this.handleChange = this.handleChange.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
+  }
 
   componentDidMount() {
     const productId = this.props.match.params.productId
     this.props.loadProduct(productId)
   }
 
-  //For review: will need an onChange & onSubmit
+  async handleSubmit(event) {
+    try {
+      event.preventDefault()
+      // console.log('Submitting review', this.state.content, this.state.rating)
+      //Creating new review
+      let content = this.state.content
+      let rating = this.state.rating
+      const productId = this.props.match.params.productId
+      const newReview = {
+        content,
+        rating,
+        productId
+        //To do: userId add in later
+      }
+      const {data} = await axios.post('/api/reviews', newReview)
+      // console.log('Confirming posted review', data)
+
+      this.props.loadProduct(productId)
+      this.setState({
+        content: '',
+        rating: 0
+      })
+    } catch (error) {
+      console.log('Error Submitting new review', error)
+    }
+  }
+
+  handleChange(event) {
+    this.setState({
+      [event.target.name]: event.target.value
+    })
+    // console.log('THE CURRENT STATE', this.state)
+  }
+  //To do: add button to add item to cart
+  //To do: add to cart button should add item to cart but updating user's order and setting it to cart status
 
   render() {
     if (!this.props.product.name) {
@@ -21,20 +62,34 @@ class singleProduct extends React.Component {
 
     return (
       <div>
-        <div>This is a single product page</div>
         <h2>{this.props.product.name}</h2>
         <img className="defaultIceCream" src={this.props.product.imageUrl} />
         <div>${this.props.product.price}</div>
         <p>{this.props.product.description}</p>
+        <button type="button">Add To Cart</button>
         <hr />
         <div>
           <h3>Reviews</h3>
-          <label htmlFor="addReview">Add a review</label>
-          <input
-            name="addReview"
-            type="text"
-            placeholder="What's your review?"
-          />
+          <form onSubmit={this.handleSubmit}>
+            <label htmlFor="content">Add a review</label>
+            <input
+              name="content"
+              type="text"
+              placeholder="What's your review?"
+              onChange={this.handleChange}
+              value={this.state.content}
+            />
+            <label htmlFor="rating">Rating:</label>
+            <select name="rating" onChange={this.handleChange}>
+              <option value={0}>0</option>
+              <option value={1}>1</option>
+              <option value={2}>2</option>
+              <option value={3}>3</option>
+              <option value={4}>4</option>
+              <option value={5}>5</option>
+            </select>
+            <button type="submit">Submit Review</button>
+          </form>
           <br />
           <div>
             {this.props.product.reviews.length >= 1 ? (
