@@ -67,6 +67,16 @@ const createApp = () => {
   app.use('/auth', require('./auth'))
   app.use('/api', require('./api'))
 
+  /*
+  CREATED A TEST ROUTE BELOW TO DEMONSTRATE HOW YOU CAN ADD THINGS TO A SESSION, WHICH WILL PERSIST IN DATABASE
+  THIS CAN BE USEFUL WHEN DEALING WITH A GUEST CART
+  CAN ALSO ACCESS WHAT IS CURRENTLY ON SESSION BY CHECKING req.session
+  */
+  app.get('/test', (req, res, next) => {
+    req.session.order = 99
+    res.end()
+  })
+
   // static file-serving middleware
   app.use(express.static(path.join(__dirname, '..', 'public')))
 
