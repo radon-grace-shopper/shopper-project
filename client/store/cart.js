@@ -22,6 +22,7 @@ const updateQuantityAction = orderProduct => ({
 
 export const getOrders = id => {
   return async dispatch => {
+    console.log(id)
     try {
       const {data} = await axios.get(`/api/orders/user/${id}`)
       dispatch(setOrders(data))
