@@ -50,7 +50,7 @@ class singleProduct extends React.Component {
     this.setState({
       [event.target.name]: event.target.value
     })
-    console.log('the state', this.state)
+    // console.log('the state', this.state)
   }
   //To do: add button to add item to cart
   //To do: add to cart button should add item to cart but updating user's order and setting it to cart status
@@ -75,7 +75,10 @@ class singleProduct extends React.Component {
           min="1"
           max={this.props.product.inventory}
         />
-        <AddToCart />
+        <AddToCart
+          productId={this.props.match.params.productId}
+          quantity={this.state.quantity}
+        />
         <hr />
         <div>
           <h3>Reviews</h3>

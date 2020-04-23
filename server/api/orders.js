@@ -60,6 +60,22 @@ router.delete('/:id', async (req, res, next) => {
   }
 })
 
+router.post('/user/:userId', async (req, res, next) => {
+  try {
+    console.log('Reached add to cart POST route')
+    const order = await Order.findOne({
+      where: {userId: req.params.userId, status: 'cart'}
+    })
+    const product = await Product.findOne({where: {id: req.body.productId}})
+    console.log(Order.prototype)
+    order.addProduct(product)
+    res.json(order)
+  } catch (err) {
+    console.log('Error at cart post route')
+    next(err)
+  }
+})
+
 /*
   will need to use session data to setup User order routes.
   given a session with a certain user ID, we will want to
