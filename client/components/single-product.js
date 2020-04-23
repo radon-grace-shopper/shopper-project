@@ -2,13 +2,15 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {fetchProduct} from '../store/singleProductReducer'
 import axios from 'axios'
+import AddToCart from './addToCart'
 
 class singleProduct extends React.Component {
   constructor() {
     super()
     this.state = {
       content: '',
-      rating: 0
+      rating: 0,
+      quantity: 1
     }
     this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -48,6 +50,7 @@ class singleProduct extends React.Component {
     this.setState({
       [event.target.name]: event.target.value
     })
+    console.log('the state', this.state)
   }
   //To do: add button to add item to cart
   //To do: add to cart button should add item to cart but updating user's order and setting it to cart status
@@ -64,7 +67,15 @@ class singleProduct extends React.Component {
         <img className="defaultIceCream" src={this.props.product.imageUrl} />
         <div>${this.props.product.price}</div>
         <p>{this.props.product.description}</p>
-        <button type="button">Add To Cart</button>
+        <input
+          type="number"
+          name="quantity"
+          value={this.state.quantity}
+          onChange={this.handleChange}
+          min="1"
+          max={this.props.product.inventory}
+        />
+        <AddToCart />
         <hr />
         <div>
           <h3>Reviews</h3>
