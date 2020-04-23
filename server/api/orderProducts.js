@@ -1,16 +1,30 @@
 const router = require('express').Router()
-const {orderProduct} = require('../db/models')
+const {OrderProduct} = require('../db/models')
 module.exports = router
 
-router.put('/:orderId/productId', async (req, res, next) => {
+// router.put('/:orderId/:productId', async (req, res, next) => {
+//   try {
+//     const updatedProduct = await OrderProduct.update(req.body, {
+//       where: {
+//         id: req.params.id,
+//       },
+//     })
+//     res.json(updatedProduct)
+//     res.status(204).end()
+//   } catch (err) {
+//     next(err)
+//   }
+// })
+
+router.delete('/:orderId/:productId', async (req, res, next) => {
   try {
-    const updatedProduct = await orderProduct.update(req.body, {
+    await OrderProduct.destroy({
       where: {
-        id: req.params.id
+        orderId: req.params.orderId,
+        productId: req.params.productId
       }
     })
-    res.json(updatedProduct)
-    res.status(204).end()
+    res.status(202).send('DELETED')
   } catch (err) {
     next(err)
   }

@@ -1,9 +1,10 @@
 const router = require('express').Router()
 const {Order, Product} = require('../db/models')
 module.exports = router
+const {isAdmin, isSpecificUser} = require('./middleware')
 
 //possible admin/engineer route route
-router.get('/', async (req, res, next) => {
+router.get('/', isAdmin, async (req, res, next) => {
   try {
     const orders = await Order.findAll()
     res.json(orders)
@@ -21,7 +22,7 @@ router.get('/:id', async (req, res, next) => {
   }
 })
 
-router.get('/user/:userId', async (req, res, next) => {
+router.get('/user/:userId', isSpecificUser, async (req, res, next) => {
   try {
     const orders = await Order.findAll({
       where: {userId: req.params.userId, status: 'cart'},
