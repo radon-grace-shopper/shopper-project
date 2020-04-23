@@ -9,9 +9,10 @@ const setOrders = orders => ({
   orders
 })
 
-const deleteOrderAction = id => ({
+const deleteOrderAction = (orderId, productId) => ({
   type: DELETE_ORDER,
-  id
+  orderId,
+  productId
 })
 
 const updateQuantityAction = orderProduct => ({
@@ -30,13 +31,11 @@ export const getOrders = id => {
   }
 }
 
-//change to delete route
-export const deleteOrder = order => {
+export const deleteOrder = (orderId, productId) => {
   return async dispatch => {
     try {
-      order.status = 'completed'
-      await axios.put(`/api/orders/${order.id}`, order)
-      dispatch(deleteOrderAction(order.id))
+      await axios.delete(`/api/orderProducts/${orderId}/${productId}`)
+      dispatch(deleteOrderAction(orderId, productId))
     } catch (err) {
       console.log('ERROR DELETING ORDER', err)
     }
@@ -47,8 +46,10 @@ export const updateQuantity = (orderProduct, quantity) => {
   return async dispatch => {
     try {
       orderProduct.quantity = quantity
+      console.log(orderProduct)
       await axios.put(
-        `/api/orderProducts/${orderProduct.orderId}/${orderProduct.productId}`
+        `/api/orderProducts/${orderProduct.orderId}/${orderProduct.productId}`,
+        orderProduct
       )
       dispatch(updateQuantityAction(orderProduct))
     } catch (err) {
@@ -62,7 +63,17 @@ export default function(state = [], action) {
     case SET_ORDERS:
       return action.orders
     case DELETE_ORDER:
-      return state.filter(order => order.id !== action.id)
+      return state.map(order => {
+        if (order.id === action.orderId) {
+          order.products = order.products.filter(
+            product => product.id !== action.productId
+          )
+          console.log(order)
+          return order
+        } else {
+          return order
+        }
+      })
     case UPDATE_QUANTITY:
       return state.map(order => {
         if (order.id === action.orderProduct.orderId) {
