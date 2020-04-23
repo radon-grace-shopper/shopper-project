@@ -44,11 +44,12 @@ export const deleteOrder = order => {
 }
 
 export const updateQuantity = (orderProduct, quantity) => {
+  console.log(orderProduct, quantity)
   return async dispatch => {
     try {
-      orderProduct.quantity = quantity
       await axios.put(
-        `/api/orderProducts/${orderProduct.orderId}/${orderProduct.productId}`
+        `/api/orderProducts/${orderProduct.orderId}/${orderProduct.productId}`,
+        {quantity: quantity}
       )
       dispatch(updateQuantityAction(orderProduct))
     } catch (err) {
@@ -64,20 +65,30 @@ export default function(state = [], action) {
     case DELETE_ORDER:
       return state.filter(order => order.id !== action.id)
     case UPDATE_QUANTITY:
-      return state.map(order => {
-        if (order.id === action.orderProduct.orderId) {
-          order.products.map(product => {
-            if (product.id === action.orders.orderProduct) {
-              product.orderProduct.quantity = action.orderProduct.quantity
-              return product
-            } else {
-              return product
-            }
-          })
-        } else {
-          return order
-        }
-      })
+      // return state.map(order => {
+      //   console.log('where do we go now')
+      //   if (order.id === action.orderProduct.orderId) {
+      //     order.products.map(product => {
+      //       if (product.id === action.orderProduct.productId) {
+      //         console.log('product id = action product id')
+      //         product.orderProduct.quantity = action.orderProduct.quantity
+      //         console.log(product)
+      //         return product
+      //       } else {
+      //         console.log('else gang')
+      //         return product
+      //       }
+      //     })
+      //   } else {
+      //     console.log('ultra else gang')
+      //     return order
+      //   }
+      // })
+      // console.log(state[0])
+      // const [product] = state[0].products.filter(el => el.id = action.orderProduct.productId)
+      // console.log(product)
+      // product.quantity = action.orderProduct.quantity
+      return [...state]
     default:
       return state
   }

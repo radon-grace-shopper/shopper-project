@@ -1,12 +1,22 @@
 const router = require('express').Router()
-const {orderProduct} = require('../db/models')
+const {orderProducts} = require('../db/models')
 module.exports = router
 
-router.put('/:orderId/productId', async (req, res, next) => {
+router.get('/', async (req, res, next) => {
   try {
-    const updatedProduct = await orderProduct.update(req.body, {
+    const orders = await orderProducts.findAll()
+    res.json(orders)
+  } catch (err) {
+    next(err)
+  }
+})
+router.put('/:orderId/:productId', async (req, res, next) => {
+  try {
+    console.log('hitting the post route with', req.body)
+    const updatedProduct = await orderProducts.update(req.body, {
       where: {
-        id: req.params.id
+        orderId: req.params.orderId,
+        productId: req.params.productId
       }
     })
     res.json(updatedProduct)

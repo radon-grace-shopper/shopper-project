@@ -26,7 +26,7 @@ class CartView extends Component {
                     id="quantity"
                     value={product.orderProduct.quantity}
                     onChange={() =>
-                      this.props.updateQuantity(product.orderProduct)
+                      this.props.updateQuantity(product.orderProduct, 1)
                     }
                   />
                   <br />
