@@ -1,6 +1,7 @@
 const router = require('express').Router()
 const {Review} = require('../db/models')
 module.exports = router
+const {isLoggedIn} = require('./middleware')
 
 //GET /api/reviews
 router.get('/', async (req, res, next) => {
@@ -14,7 +15,7 @@ router.get('/', async (req, res, next) => {
 })
 
 //POST /api/reviews
-router.post('/', async (req, res, next) => {
+router.post('/', isLoggedIn, async (req, res, next) => {
   try {
     console.log('Found post review route')
     const review = await Review.create(req.body)

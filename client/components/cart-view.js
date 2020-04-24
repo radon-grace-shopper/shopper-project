@@ -36,7 +36,7 @@ class CartView extends Component {
                   <br />
                   <button
                     type="button"
-                    onClick={() => this.props.deleteOrder(order)}
+                    onClick={() => this.props.deleteOrder(order.id, product.id)}
                   >
                     Remove
                   </button>
@@ -57,7 +57,8 @@ const mapState = state => ({
 })
 
 const mapDispatch = dispatch => ({
-  deleteOrder: order => dispatch(deleteOrder(order)),
+  deleteOrder: (orderId, productId) =>
+    dispatch(deleteOrder(orderId, productId)),
   getOrders: id => dispatch(getOrders(id)),
   updateQuantity: (orderProduct, quantity) =>
     dispatch(updateQuantity(orderProduct, quantity))
