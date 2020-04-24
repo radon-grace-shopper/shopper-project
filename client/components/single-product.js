@@ -58,7 +58,7 @@ class singleProduct extends React.Component {
     this.props.product.reviews.forEach(review => {
       sum += review.rating
     })
-    return sum / this.props.product.reviews.length
+    return sum / this.props.product.reviews.length || 'Not yet rated'
   }
 
   render() {
