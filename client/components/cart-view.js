@@ -1,13 +1,17 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {deleteOrder, getOrders, updateQuantity} from '../store/cart'
+
 import {me} from '../store/user'
+
 import CartedProduct from './carted-product'
 
 class CartView extends Component {
   constructor() {
     super()
+
     this.definingUser = this.definingUser.bind(this)
+
   }
   componentDidMount() {
     console.log(this.props.user)
@@ -26,6 +30,7 @@ class CartView extends Component {
   }
 
   render() {
+
     // console.log('this is props.cart', this.props.cart)
     if (!this.props.cart.products) {
       // console.log('got here')
@@ -35,6 +40,7 @@ class CartView extends Component {
       //   'broke the rules and got here even though this.props.cart:',
       //   this.props.cart
       // )
+
       return (
         <div>
           <div key={this.props.cart.id}>
