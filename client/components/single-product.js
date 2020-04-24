@@ -17,21 +17,25 @@ class singleProduct extends React.Component {
   }
 
   componentDidMount() {
+    console.log('Component DID mount')
     const productId = this.props.match.params.productId
     this.props.loadProduct(productId)
   }
 
   async handleSubmit(event) {
+    console.log('handleSUBMIT')
     try {
       event.preventDefault()
       //Creating new review
       let content = this.state.content
       let rating = this.state.rating
+      let userId = this.props.user.id
       const productId = this.props.match.params.productId
       const newReview = {
         content,
         rating,
-        productId
+        productId,
+        userId
         //To do: userId add in later
       }
       await axios.post('/api/reviews', newReview)
@@ -75,6 +79,7 @@ class singleProduct extends React.Component {
         <AddToCart
           productId={this.props.match.params.productId}
           quantity={this.state.quantity}
+          price={this.props.product.price}
         />
         <hr />
         <div>
@@ -104,7 +109,7 @@ class singleProduct extends React.Component {
             {this.props.product.reviews.length >= 1 ? (
               this.props.product.reviews.map(review => (
                 <div key={review.id}>
-                  <div>Reviewed by: {review.user.email}</div>
+                  <div>Reviewed by: {'Loading' && review.user.email}</div>
                   <div>Rating: {review.rating}/5</div>
                   <div>{review.content}</div>
                   <br />
@@ -122,7 +127,8 @@ class singleProduct extends React.Component {
 
 const mapState = state => {
   return {
-    product: state.product
+    product: state.product,
+    user: state.user
   }
 }
 
