@@ -54,7 +54,7 @@ class singleProduct extends React.Component {
   }
 
   render() {
-    // console.log('Props', this.props)
+    console.log('Props', this.props)
     if (!this.props.product.name) {
       return <h2>Loading...</h2>
     }
@@ -65,42 +65,49 @@ class singleProduct extends React.Component {
         <img className="defaultIceCream" src={this.props.product.imageUrl} />
         <div>${this.props.product.price}</div>
         <p>{this.props.product.description}</p>
-        <input
-          type="number"
-          name="quantity"
-          value={this.state.quantity}
-          onChange={this.handleChange}
-          min="1"
-          max={this.props.product.inventory}
-        />
-        <AddToCart
-          productId={this.props.match.params.productId}
-          quantity={this.state.quantity}
-          price={this.props.product.price}
-        />
+        <div>
+          <label htmlFor="quantity">Quantity: </label>
+          <input
+            type="number"
+            name="quantity"
+            value={this.state.quantity}
+            onChange={this.handleChange}
+            min="1"
+            max={this.props.product.inventory}
+          />
+          <AddToCart
+            productId={this.props.match.params.productId}
+            quantity={this.state.quantity}
+            price={this.props.product.price}
+          />
+        </div>
         <hr />
         <div>
           <h3>Reviews</h3>
-          <form onSubmit={this.handleSubmit}>
-            <label htmlFor="content">Add a review</label>
-            <input
-              name="content"
-              type="text"
-              placeholder="What's your review?"
-              onChange={this.handleChange}
-              value={this.state.content}
-            />
-            <label htmlFor="rating">Rating:</label>
-            <select name="rating" onChange={this.handleChange}>
-              <option value={0}>0</option>
-              <option value={1}>1</option>
-              <option value={2}>2</option>
-              <option value={3}>3</option>
-              <option value={4}>4</option>
-              <option value={5}>5</option>
-            </select>
-            <button type="submit">Submit Review</button>
-          </form>
+          {this.props.user.id ? (
+            <form onSubmit={this.handleSubmit}>
+              <label htmlFor="content">Add a review</label>
+              <input
+                name="content"
+                type="text"
+                placeholder="What's your review?"
+                onChange={this.handleChange}
+                value={this.state.content}
+              />
+              <label htmlFor="rating">Rating:</label>
+              <select name="rating" onChange={this.handleChange}>
+                <option value={0}>0</option>
+                <option value={1}>1</option>
+                <option value={2}>2</option>
+                <option value={3}>3</option>
+                <option value={4}>4</option>
+                <option value={5}>5</option>
+              </select>
+              <button type="submit">Submit Review</button>
+            </form>
+          ) : (
+            <div>Please log in if you would like to leave a review</div>
+          )}
           <br />
           <div>
             {this.props.product.reviews.length >= 1 ? (
