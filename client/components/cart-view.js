@@ -1,26 +1,40 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {deleteOrder, getOrders, updateQuantity} from '../store/cart'
+import {me} from '../store/user'
 import CartedProduct from './carted-product'
 
 class CartView extends Component {
   constructor() {
     super()
+    this.definingUser = this.definingUser.bind(this)
   }
   componentDidMount() {
+    console.log(this.props.user)
+    if (this.props.user.id) {
+      // console.log('ran the if')
+      this.props.getOrders(this.props.user.id)
+    } else {
+      // console.log('we ran this')
+      this.definingUser()
+      // console.log('already ran getOrders')
+    }
+  }
+  async definingUser() {
+    const holdUp = await this.props.me()
     this.props.getOrders(this.props.user.id)
   }
 
   render() {
-    console.log('this is props.cart', this.props.cart)
+    // console.log('this is props.cart', this.props.cart)
     if (!this.props.cart.products) {
-      console.log('got here')
+      // console.log('got here')
       return <h3>loading</h3>
     } else {
-      console.log(
-        'broke the rules and got here even though this.props.cart:',
-        this.props.cart
-      )
+      // console.log(
+      //   'broke the rules and got here even though this.props.cart:',
+      //   this.props.cart
+      // )
       return (
         <div>
           <div key={this.props.cart.id}>
@@ -68,6 +82,7 @@ const mapState = state => ({
 const mapDispatch = dispatch => ({
   deleteOrder: (orderId, productId) =>
     dispatch(deleteOrder(orderId, productId)),
+  me: () => dispatch(me()),
   getOrders: id => dispatch(getOrders(id)),
   updateQuantity: (orderProduct, quantity) =>
     dispatch(updateQuantity(orderProduct, quantity))
