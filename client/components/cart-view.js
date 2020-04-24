@@ -11,7 +11,6 @@ class CartView extends Component {
     super()
 
     this.definingUser = this.definingUser.bind(this)
-
   }
   componentDidMount() {
     console.log(this.props.user)
@@ -30,7 +29,6 @@ class CartView extends Component {
   }
 
   render() {
-
     // console.log('this is props.cart', this.props.cart)
     if (!this.props.cart.products) {
       // console.log('got here')
@@ -45,7 +43,7 @@ class CartView extends Component {
         <div>
           <div key={this.props.cart.id}>
             {this.props.cart.products.map(product => (
-              <CartedProduct products={product} />
+              <CartedProduct key={product.id} products={product} />
               // <div key={product.id}>
               //   <h2>Name: {product.name}</h2>
               //   <p>Description:{product.description}</p>

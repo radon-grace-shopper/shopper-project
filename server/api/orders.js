@@ -2,7 +2,7 @@ const router = require('express').Router()
 const {Order, Product, OrderProduct} = require('../db/models')
 module.exports = router
 const {isAdmin, isSpecificUser} = require('./middleware')
-const Sequelize = require('sequelize')
+// const Sequelize = require('sequelize')
 
 //possible admin/engineer route route
 router.get('/', isAdmin, async (req, res, next) => {
@@ -71,16 +71,17 @@ router.post('/user/addToCart', async (req, res, next) => {
     await OrderProduct.create({
       orderId: order.id,
       productId: req.body.productId,
-      quantity: req.body.quantity
+      quantity: req.body.quantity,
+      purchasePrice: req.body.price
     })
-    await Product.update(
-      {inventory: Sequelize.literal(`inventory-${req.body.quantity}`)},
-      {
-        where: {
-          id: req.body.productId
-        }
-      }
-    )
+    // await Product.update(
+    //   {inventory: Sequelize.literal(`inventory-${req.body.quantity}`)},
+    //   {
+    //     where: {
+    //       id: req.body.productId
+    //     }
+    //   }
+    // )
     res.status(204).end()
   } catch (err) {
     next(err)

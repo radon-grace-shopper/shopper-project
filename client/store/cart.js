@@ -71,7 +71,6 @@ export default function(state = {}, action) {
       // return state.map(order => {
       return {
         ...state,
-
         products: state.products.filter(
           product => product.id !== action.productId
         )
