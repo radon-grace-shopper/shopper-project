@@ -19,7 +19,6 @@ class addToCart extends React.Component {
       quantity: this.props.quantity
     }
     await axios.post(`/api/orders/user/addToCart`, order)
-    //call getOrders after the update
     this.props.getOrders(userId)
   }
 

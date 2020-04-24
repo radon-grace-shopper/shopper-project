@@ -50,10 +50,7 @@ class singleProduct extends React.Component {
     this.setState({
       [event.target.name]: event.target.value
     })
-    // console.log('the state', this.state)
   }
-  //To do: add button to add item to cart
-  //To do: add to cart button should add item to cart but updating user's order and setting it to cart status
 
   render() {
     console.log('Props', this.props)
