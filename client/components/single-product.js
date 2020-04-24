@@ -14,6 +14,7 @@ class singleProduct extends React.Component {
     }
     this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
+    this.calculateReviews = this.calculateReviews.bind(this)
   }
 
   componentDidMount() {
@@ -52,6 +53,13 @@ class singleProduct extends React.Component {
       [event.target.name]: event.target.value
     })
   }
+  calculateReviews() {
+    let sum = 0
+    this.props.product.reviews.forEach(review => {
+      sum += review.rating
+    })
+    return sum / this.props.product.reviews.length
+  }
 
   render() {
     console.log('Props', this.props)
@@ -62,6 +70,7 @@ class singleProduct extends React.Component {
     return (
       <div>
         <h2>{this.props.product.name}</h2>
+        <h4>Average Rating: {this.calculateReviews()}</h4>
         <img className="defaultIceCream" src={this.props.product.imageUrl} />
         <div>${this.props.product.price}</div>
         <p>{this.props.product.description}</p>
