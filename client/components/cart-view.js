@@ -4,9 +4,6 @@ import {deleteOrder, getOrders, updateQuantity} from '../store/cart'
 import CartedProduct from './carted-product'
 
 class CartView extends Component {
-  constructor() {
-    super()
-  }
   componentDidMount() {
     this.props.getOrders(this.props.user.id)
   }
@@ -25,7 +22,7 @@ class CartView extends Component {
         <div>
           <div key={this.props.cart.id}>
             {this.props.cart.products.map(product => (
-              <CartedProduct products={product} />
+              <CartedProduct key={product.id} products={product} />
               // <div key={product.id}>
               //   <h2>Name: {product.name}</h2>
               //   <p>Description:{product.description}</p>

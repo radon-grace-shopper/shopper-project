@@ -62,32 +62,32 @@ export const updateQuantity = (orderProduct, quantity) => {
 export default function(state = {}, action) {
   switch (action.type) {
     case SET_ORDERS:
-      return action.orders
+      if (action.orders) {
+        return action.orders
+      } else {
+        return {}
+      }
     case DELETE_ORDER:
       // return state.map(order => {
       return {
         ...state,
-        products: state.products.map(product => {
-          if (product) {
-            if (product.id !== action.productId) {
-              return product
-            }
-          }
-        })
+        products: state.products.filter(
+          product => product.id !== action.productId
+        )
       }
 
     case UPDATE_QUANTITY:
-      const testproducts = state.products.map(product => {
-        if (product.id === action.orderProduct.productId) {
-          return {
-            ...product,
-            orderProduct: action.orderProduct
-          }
-        } else {
-          return product
-        }
-      })
-      console.log(testproducts)
+      // const testproducts = state.products.map((product) => {
+      //   if (product.id === action.orderProduct.productId) {
+      //     return {
+      //       ...product,
+      //       orderProduct: action.orderProduct,
+      //     }
+      //   } else {
+      //     return product
+      //   }
+      // })
+      // console.log(testproducts)
       return {
         ...state,
         products: state.products.map(product => {
