@@ -17,13 +17,11 @@ class singleProduct extends React.Component {
   }
 
   componentDidMount() {
-    console.log('Component DID mount')
     const productId = this.props.match.params.productId
     this.props.loadProduct(productId)
   }
 
   async handleSubmit(event) {
-    console.log('handleSUBMIT')
     try {
       event.preventDefault()
       //Creating new review
@@ -36,7 +34,6 @@ class singleProduct extends React.Component {
         rating,
         productId,
         userId
-        //To do: userId add in later
       }
       await axios.post('/api/reviews', newReview)
 
@@ -57,7 +54,7 @@ class singleProduct extends React.Component {
   }
 
   render() {
-    console.log('Props', this.props)
+    // console.log('Props', this.props)
     if (!this.props.product.name) {
       return <h2>Loading...</h2>
     }
