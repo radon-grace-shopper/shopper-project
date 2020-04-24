@@ -16,8 +16,6 @@ class CartedProduct extends Component {
     })
   }
   handleChange(event) {
-    console.log('getting here')
-    console.log(this.state.quant)
     this.setState({
       quant: event.target.value
     })
@@ -29,36 +27,46 @@ class CartedProduct extends Component {
   render() {
     console.log(this.state.quant)
     const product = this.props.products
-    return (
-      <form>
-        <div key={product.id}>
-          <h2>Name: {product.name}</h2>
-          <p>Description:{product.description}</p>
-          <img className="defaultIceCream" src={product.imageUrl} />
-          <br />
-          <a>Single Price: {product.price}</a>
-          <label htmlFor="quantity">Quantity:</label>
-          <input
-            type="number"
-            id="quantity"
-            value={this.state.quant}
-            onChange={this.handleChange}
-          />
-          <br />
-          <a>Total Price: {product.orderProduct.quantity * product.price}</a>
-          <br />
-          <button type="button" onClick={() => this.props.deleteOrder(order)}>
-            Remove
-          </button>
-          <hr />
-        </div>
-      </form>
-    )
+    if (this.props.products) {
+      return (
+        <form>
+          <div key={product.id}>
+            <h2>Name: {product.name}</h2>
+            <p>Description:{product.description}</p>
+            <img className="defaultIceCream" src={product.imageUrl} />
+            <br />
+            <a>Single Price: {product.price}</a>
+            <label htmlFor="quantity">Quantity:</label>
+            <input
+              type="number"
+              id="quantity"
+              value={this.state.quant}
+              onChange={this.handleChange}
+            />
+            <br />
+            <a>Total Price: {product.orderProduct.quantity * product.price}</a>
+            <br />
+            <button
+              type="button"
+              onClick={() =>
+                this.props.deleteOrder(product.orderProduct.orderId, product.id)
+              }
+            >
+              Remove
+            </button>
+            <hr />
+          </div>
+        </form>
+      )
+    } else {
+      return null
+    }
   }
 }
 
 const mapDispatchToProps = dispatch => ({
-  deleteOrder: order => dispatch(deleteOrder(order)),
+  deleteOrder: (orderId, productId) =>
+    dispatch(deleteOrder(orderId, productId)),
   getOrders: id => dispatch(getOrders(id)),
   updateQuantity: (orderProduct, quantity) =>
     dispatch(updateQuantity(orderProduct, quantity))

@@ -1,10 +1,10 @@
 const router = require('express').Router()
-const {orderProducts} = require('../db/models')
+const {OrderProduct} = require('../db/models')
 module.exports = router
 
 router.get('/', async (req, res, next) => {
   try {
-    const orders = await orderProducts.findAll()
+    const orders = await OrderProduct.findAll()
     res.json(orders)
   } catch (err) {
     next(err)
@@ -12,15 +12,34 @@ router.get('/', async (req, res, next) => {
 })
 router.put('/:orderId/:productId', async (req, res, next) => {
   try {
-    console.log('hitting the post route with', req.body)
-    const updatedProduct = await orderProducts.update(req.body, {
+    console.log('hitting the put route with', req.body)
+    await OrderProduct.update(req.body, {
+      where: {
+        orderId: req.params.orderId,
+        productId: req.params.productId
+      }
+    })
+    const [updatedProduct] = await OrderProduct.findAll({
       where: {
         orderId: req.params.orderId,
         productId: req.params.productId
       }
     })
     res.json(updatedProduct)
-    res.status(204).end()
+  } catch (err) {
+    next(err)
+  }
+})
+
+router.delete('/:orderId/:productId', async (req, res, next) => {
+  try {
+    await OrderProduct.destroy({
+      where: {
+        orderId: req.params.orderId,
+        productId: req.params.productId
+      }
+    })
+    res.status(202).send('DELETED')
   } catch (err) {
     next(err)
   }
