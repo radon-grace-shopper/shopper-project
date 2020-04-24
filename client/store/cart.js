@@ -22,10 +22,10 @@ const updateQuantityAction = orderProduct => ({
 
 export const getOrders = id => {
   return async dispatch => {
-    console.log(id)
     try {
       const {data} = await axios.get(`/api/orders/user/${id}`)
-      dispatch(setOrders(data))
+      const [destructuredData] = data
+      dispatch(setOrders(destructuredData))
     } catch (err) {
       console.log('ERROR GETTING ORDERS', err)
     }
@@ -44,52 +44,64 @@ export const deleteOrder = (orderId, productId) => {
 }
 
 export const updateQuantity = (orderProduct, quantity) => {
+  // console.log(orderProduct, quantity)
   return async dispatch => {
     try {
-      orderProduct.quantity = quantity
-      console.log(orderProduct)
-      await axios.put(
+      const {data} = await axios.put(
         `/api/orderProducts/${orderProduct.orderId}/${orderProduct.productId}`,
-        orderProduct
+        {quantity: quantity}
       )
-      dispatch(updateQuantityAction(orderProduct))
+      // console.log(data)
+      dispatch(updateQuantityAction(data))
     } catch (err) {
       console.log('ERROR UPDATING QUANTITY', err)
     }
   }
 }
 
-export default function(state = [], action) {
+export default function(state = {}, action) {
   switch (action.type) {
     case SET_ORDERS:
       return action.orders
     case DELETE_ORDER:
-      return state.map(order => {
-        if (order.id === action.orderId) {
-          order.products = order.products.filter(
-            product => product.id !== action.productId
-          )
-          console.log(order)
-          return order
-        } else {
-          return order
-        }
-      })
-    case UPDATE_QUANTITY:
-      return state.map(order => {
-        if (order.id === action.orderProduct.orderId) {
-          order.products.map(product => {
-            if (product.id === action.orders.orderProduct) {
-              product.orderProduct.quantity = action.orderProduct.quantity
-              return product
-            } else {
+      // return state.map(order => {
+      return {
+        ...state,
+        products: state.products.map(product => {
+          if (product) {
+            if (product.id !== action.productId) {
               return product
             }
-          })
+          }
+        })
+      }
+
+    case UPDATE_QUANTITY:
+      const testproducts = state.products.map(product => {
+        if (product.id === action.orderProduct.productId) {
+          return {
+            ...product,
+            orderProduct: action.orderProduct
+          }
         } else {
-          return order
+          return product
         }
       })
+      console.log(testproducts)
+      return {
+        ...state,
+        products: state.products.map(product => {
+          if (product.id === action.orderProduct.productId) {
+            return {
+              ...product,
+              orderProduct: action.orderProduct
+            }
+          } else {
+            return product
+          }
+        })
+      }
+
     default:
       return state
   }
