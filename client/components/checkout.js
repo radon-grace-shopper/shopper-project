@@ -1,20 +1,31 @@
-import React from 'react'
-import {loadStripe} from '@stripe/stripe-js'
-import {
-  CardElement,
-  Elements,
-  useElements,
-  useStripe
-} from '@stripe/react-stripe-js'
+import React, {Component} from 'react'
 import {connect} from 'react-redux'
+import {CardElement} from '@stripe/react-stripe-js'
 
-const Checkout = () => {
-  const stripe = useStripe()
-  const elements = useElements()
+class Checkout extends Component {
+  constructor() {
+    super()
+    this.state = {
+      name: '',
+      email: '',
+      address: ''
+    }
+    this.handleChange = this.handleChange.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
+  }
 
-  const handleSubmit = async event => {
-    // Block native form submission.
+  handleChange(event) {
+    this.setState({
+      [event.target.id]: event.target.value
+    })
+  }
+
+  async handleSubmit() {
     event.preventDefault()
+
+    const {stripe, elements} = this.props
+
+    console.log(stripe)
 
     if (!stripe || !elements) {
       // Stripe.js has not loaded yet. Make sure to disable
@@ -39,33 +50,59 @@ const Checkout = () => {
       console.log('[PaymentMethod]', paymentMethod)
     }
   }
-  const stripePromise = loadStripe('pk_test_6pRNASCoBOKtIshFeQd4XMUh')
 
-  return (
-    <Elements stripe={stripePromise}>
-      <form onSubmit={handleSubmit}>
-        <CardElement
-          options={{
-            style: {
-              base: {
-                fontSize: '16px',
-                color: '#424770',
-                '::placeholder': {
-                  color: '#aab7c4'
+  render() {
+    console.log(this.props.stripe)
+    return (
+      <div>
+        <form onSubmit={this.handleSubmit}>
+          <label htmlFor="name">Name:</label>
+          <input
+            id="name"
+            name="name"
+            type="text"
+            value={this.state.name}
+            onChange={this.handleChange}
+          />
+          <label htmlFor="email">E-mail:</label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            value={this.state.email}
+            onChange={this.handleChange}
+          />
+          <label htmlFor="address">Address:</label>
+          <input
+            id="address"
+            name="address"
+            type="text"
+            value={this.state.address}
+            onChange={this.handleChange}
+          />
+          <CardElement
+            options={{
+              style: {
+                base: {
+                  fontSize: '16px',
+                  color: '#424770',
+                  '::placeholder': {
+                    color: '#aab7c4'
+                  }
+                },
+                invalid: {
+                  color: '#9e2146'
                 }
-              },
-              invalid: {
-                color: '#9e2146'
               }
-            }
-          }}
-        />
-        <button type="submit" disabled={!stripe}>
-          Pay
-        </button>
-      </form>
-    </Elements>
-  )
+            }}
+          />
+          <button type="submit" disabled={!this.props.stripe}>
+            Pay
+          </button>
+        </form>
+      </div>
+    )
+  }
 }
 
 export default connect(null, null)(Checkout)
