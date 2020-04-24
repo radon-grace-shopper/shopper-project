@@ -33,7 +33,7 @@ class addToCart extends React.Component {
         <button type="submit" className="addToCart">
           Add to Cart
         </button>
-        <div>
+        <div id="cartMessage">
           {this.state.clicked ? (
             <p>
               Item was added to Cart!

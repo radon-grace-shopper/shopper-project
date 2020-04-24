@@ -29,6 +29,13 @@ button {
   margin: 0.5rem;
 }
 
+/* #cartMessage {
+  margin: 0em;
+} */
+#cartMessage > p {
+  margin: 0em;
+}
+
 .addToCart {
   background-color: rgb(255, 205, 80);
   border: none;
@@ -42,6 +49,7 @@ button {
   border-bottom: solid 4px #413017;
   border-radius: 20px;
   cursor: pointer;
+  margin: 0px;
 }
 .addToCart:hover {
   color: currentColor;
