@@ -1,7 +1,8 @@
 const router = require('express').Router()
-const {Order, Product} = require('../db/models')
+const {Order, Product, OrderProduct} = require('../db/models')
 module.exports = router
 const {isAdmin, isSpecificUser} = require('./middleware')
+const Sequelize = require('sequelize')
 
 //possible admin/engineer route route
 router.get('/', isAdmin, async (req, res, next) => {
@@ -61,21 +62,49 @@ router.delete('/:id', async (req, res, next) => {
   }
 })
 
-router.post('/user/:userId', async (req, res, next) => {
+router.post('/user/addToCart', async (req, res, next) => {
   try {
-    console.log('Reached add to cart POST route')
-    const order = await Order.findOne({
-      where: {userId: req.params.userId, status: 'cart'}
+    console.log('Reached Add to Cart POST route')
+    // console.log('USER?', req.user.id)
+    const [order] = await Order.findOrCreate({
+      where: {userId: req.user.id, status: 'cart'}
     })
-    const product = await Product.findOne({where: {id: req.body.productId}})
-    console.log(Order.prototype)
-    order.addProduct(product)
-    res.json(order)
+    // console.log('ORDER', order.id)
+    const orderProduct = await OrderProduct.create({
+      orderId: order.id,
+      productId: req.body.productId,
+      quantity: req.body.quantity
+    })
+    // console.log('ORDER PRODUCT', orderProduct.id)
+    const result = await Product.update(
+      {inventory: Sequelize.literal(`inventory-${req.body.quantity}`)},
+      {
+        where: {
+          id: req.body.productId
+        }
+      }
+    )
+    // console.log('UPDATING PRODUCT INVENTORY', result)
   } catch (err) {
-    console.log('Error at cart post route')
     next(err)
   }
 })
+
+// router.post('/user/:userId', async (req, res, next) => {
+//   try {
+//     console.log('Reached add to cart POST route')
+//     const order = await Order.findOne({
+//       where: {userId: req.params.userId, status: 'cart'}
+//     })
+//     const product = await Product.findOne({where: {id: req.body.productId}})
+//     console.log(Order.prototype)
+//     order.addProduct(product)
+//     res.json(order)
+//   } catch (err) {
+//     console.log('Error at cart post route')
+//     next(err)
+//   }
+// })
 
 /*
   will need to use session data to setup User order routes.
