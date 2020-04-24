@@ -2,13 +2,15 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {fetchProduct} from '../store/singleProductReducer'
 import axios from 'axios'
+import AddToCart from './addToCart'
 
 class singleProduct extends React.Component {
   constructor() {
     super()
     this.state = {
       content: '',
-      rating: 0
+      rating: 0,
+      quantity: 1
     }
     this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -22,7 +24,6 @@ class singleProduct extends React.Component {
   async handleSubmit(event) {
     try {
       event.preventDefault()
-      // console.log('Submitting review', this.state.content, this.state.rating)
       //Creating new review
       let content = this.state.content
       let rating = this.state.rating
@@ -33,8 +34,7 @@ class singleProduct extends React.Component {
         productId
         //To do: userId add in later
       }
-      const {data} = await axios.post('/api/reviews', newReview)
-      // console.log('Confirming posted review', data)
+      await axios.post('/api/reviews', newReview)
 
       this.props.loadProduct(productId)
       this.setState({
@@ -50,12 +50,10 @@ class singleProduct extends React.Component {
     this.setState({
       [event.target.name]: event.target.value
     })
-    // console.log('THE CURRENT STATE', this.state)
   }
-  //To do: add button to add item to cart
-  //To do: add to cart button should add item to cart but updating user's order and setting it to cart status
 
   render() {
+    console.log('Props', this.props)
     if (!this.props.product.name) {
       return <h2>Loading...</h2>
     }
@@ -66,7 +64,18 @@ class singleProduct extends React.Component {
         <img className="defaultIceCream" src={this.props.product.imageUrl} />
         <div>${this.props.product.price}</div>
         <p>{this.props.product.description}</p>
-        <button type="button">Add To Cart</button>
+        <input
+          type="number"
+          name="quantity"
+          value={this.state.quantity}
+          onChange={this.handleChange}
+          min="1"
+          max={this.props.product.inventory}
+        />
+        <AddToCart
+          productId={this.props.match.params.productId}
+          quantity={this.state.quantity}
+        />
         <hr />
         <div>
           <h3>Reviews</h3>
@@ -95,7 +104,7 @@ class singleProduct extends React.Component {
             {this.props.product.reviews.length >= 1 ? (
               this.props.product.reviews.map(review => (
                 <div key={review.id}>
-                  <div>Reviewed by:{review.userId}...how to access email?</div>
+                  <div>Reviewed by: {review.user.email}</div>
                   <div>Rating: {review.rating}/5</div>
                   <div>{review.content}</div>
                   <br />
