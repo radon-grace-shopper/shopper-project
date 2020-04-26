@@ -78,7 +78,6 @@ class singleProduct extends React.Component {
         <div>
           {this.props.product.inventory ? (
             <div>
-              {' '}
               <label htmlFor="quantity">Quantity: </label>
               <input
                 type="number"
@@ -100,7 +99,6 @@ class singleProduct extends React.Component {
               later!
             </h4>
           )}
-          {}
         </div>
         <hr />
         <div>
