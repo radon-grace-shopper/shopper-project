@@ -47,7 +47,11 @@ class addToCart extends React.Component {
               </button>
             </p>
           ) : (
-            <p />
+            <p>
+              <button className="notVisible" type="button">
+                x
+              </button>
+            </p>
           )}
         </div>
       </form>

@@ -29,11 +29,27 @@ button {
   margin: 0.5rem;
 }
 
-/* #cartMessage {
-  margin: 0em;
-} */
+/* Single Product */
+.singleProduct {
+  margin-left: 1rem;
+}
+
+.singleProduct #cartbtn form {
+  max-height: 45px;
+}
+
+.singleProduct > .quantity,
+label,
+input {
+  margin-left: 0.5rem;
+}
+
+/* Add To Cart */
 #cartMessage > p {
   margin: 0em;
+}
+.notVisible {
+  visibility: hidden;
 }
 
 .addToCart {

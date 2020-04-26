@@ -68,7 +68,7 @@ class singleProduct extends React.Component {
     }
 
     return (
-      <div>
+      <div className="singleProduct">
         <h2>{this.props.product.name}</h2>
         <h4>Average Rating: {this.calculateReviews()}</h4>
         <img className="defaultIceCream" src={this.props.product.imageUrl} />
@@ -77,7 +77,7 @@ class singleProduct extends React.Component {
 
         <div>
           {this.props.product.inventory ? (
-            <div>
+            <div className="quantity">
               <label htmlFor="quantity">Quantity: </label>
               <input
                 type="number"
@@ -88,6 +88,7 @@ class singleProduct extends React.Component {
                 max={this.props.product.inventory}
               />
               <AddToCart
+                id="cartbtn"
                 productId={this.props.match.params.productId}
                 quantity={this.state.quantity}
                 price={this.props.product.price}
