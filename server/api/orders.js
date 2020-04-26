@@ -80,7 +80,6 @@ router.post('/user/addToCart', async (req, res, next) => {
       quantity: Sequelize.literal(`quantity+${req.body.quantity}`)
     })
 
-    console.log('orderProduct', orderProduct)
     // await Product.update(
     //   {inventory: Sequelize.literal(`inventory-${req.body.quantity}`)},
     //   {
