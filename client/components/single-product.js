@@ -74,21 +74,33 @@ class singleProduct extends React.Component {
         <img className="defaultIceCream" src={this.props.product.imageUrl} />
         <div>${this.props.product.price}</div>
         <p>{this.props.product.description}</p>
+
         <div>
-          <label htmlFor="quantity">Quantity: </label>
-          <input
-            type="number"
-            name="quantity"
-            value={this.state.quantity}
-            onChange={this.handleChange}
-            min="1"
-            max={this.props.product.inventory}
-          />
-          <AddToCart
-            productId={this.props.match.params.productId}
-            quantity={this.state.quantity}
-            price={this.props.product.price}
-          />
+          {this.props.product.inventory ? (
+            <div>
+              {' '}
+              <label htmlFor="quantity">Quantity: </label>
+              <input
+                type="number"
+                name="quantity"
+                value={this.state.quantity}
+                onChange={this.handleChange}
+                min="1"
+                max={this.props.product.inventory}
+              />
+              <AddToCart
+                productId={this.props.match.params.productId}
+                quantity={this.state.quantity}
+                price={this.props.product.price}
+              />
+            </div>
+          ) : (
+            <h4>
+              Sorry, this item is currently out of stock. Please come back
+              later!
+            </h4>
+          )}
+          {}
         </div>
         <hr />
         <div>
