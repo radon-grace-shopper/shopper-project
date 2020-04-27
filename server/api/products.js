@@ -21,3 +21,17 @@ router.get('/:id', async (req, res, next) => {
     next(err)
   }
 })
+
+router.put('/:id', async (req, res, next) => {
+  try {
+    const product = await Product.update(req.body, {
+      where: {
+        id: req.params.id
+      }
+    })
+    res.json(product)
+    res.status(204).end()
+  } catch (err) {
+    next(err)
+  }
+})

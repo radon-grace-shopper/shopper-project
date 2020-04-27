@@ -1,7 +1,11 @@
 import React from 'react'
 import {connect} from 'react-redux'
+import {fetchProducts} from '../store/allProductsReducer'
 
 class adminDash extends React.Component {
+  componentDidMount() {
+    this.props.getProducts()
+  }
   render() {
     console.log('PROPS', this.props)
     if (!this.props.user.id) {
@@ -14,7 +18,8 @@ class adminDash extends React.Component {
         ) : (
           <div>
             <h3>Welcome to the admin dashboard</h3>
-            <div />
+            {/* Link to editing products */}
+            {/* Link to editing users */}
           </div>
         )}
       </div>
@@ -24,8 +29,14 @@ class adminDash extends React.Component {
 
 const mapState = state => {
   return {
-    user: state.user
+    user: state.user,
+    products: state.products
+  }
+}
+const mapDispatch = dispatch => {
+  return {
+    getProducts: () => dispatch(fetchProducts())
   }
 }
 
-export default connect(mapState)(adminDash)
+export default connect(mapState, mapDispatch)(adminDash)
