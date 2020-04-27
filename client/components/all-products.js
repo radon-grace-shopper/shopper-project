@@ -4,6 +4,13 @@ import {fetchProducts} from '../store/allProductsReducer'
 import {Link} from 'react-router-dom'
 
 class allProducts extends Component {
+  constructor() {
+    super()
+    this.state = {
+      dropDownSelect: 'all'
+    }
+    this.handleChange = this.handleChange.bind(this)
+  }
   componentDidMount() {
     this.props.getProducts()
   }
