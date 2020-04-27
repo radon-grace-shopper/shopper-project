@@ -20,7 +20,7 @@ class allProducts extends Component {
             <Link to={`/products/${el.id}`}>
               <h3>{el.name}</h3>
             </Link>
-            <img src={el.imageUrl} />
+            <img className="defaultIceCream" src={el.imageUrl} />
             <p>{el.price}</p>
           </div>
         ))}
