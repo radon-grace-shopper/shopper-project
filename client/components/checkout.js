@@ -1,6 +1,9 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {CardElement} from '@stripe/react-stripe-js'
+import axios from 'axios'
+import {checkout} from '../store/cart'
+import {Link} from 'react-router-dom'
 
 class Checkout extends Component {
   constructor() {
@@ -8,7 +11,8 @@ class Checkout extends Component {
     this.state = {
       name: '',
       email: '',
-      address: ''
+      address: '',
+      completed: false
     }
     this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -22,37 +26,45 @@ class Checkout extends Component {
 
   async handleSubmit() {
     event.preventDefault()
+    this.setState({completed: true})
 
     const {stripe, elements} = this.props
 
-    console.log(stripe)
-
-    if (!stripe || !elements) {
+    if (!stripe || !elements || this.state.completed) {
       // Stripe.js has not loaded yet. Make sure to disable
       // form submission until Stripe.js has loaded.
       return
     }
+    console.log('HELLLLLLOOOOOOOOO')
 
-    // Get a reference to a mounted CardElement. Elements knows how
-    // to find your CardElement because there can only ever be one of
-    // each type of element.
-    const cardElement = elements.getElement(CardElement)
-
-    // Use your card Element with other Stripe.js APIs
-    const {error, paymentMethod} = await stripe.createPaymentMethod({
-      type: 'card',
-      card: cardElement
+    this.props.cart.status = 'completed'
+    this.props.cart.products.map(product => {
+      product.inventory -= product.orderProduct.quantity
+      return product
     })
 
-    if (error) {
-      console.log('[error]', error)
-    } else {
-      console.log('[PaymentMethod]', paymentMethod)
-    }
+    this.props.checkout(this.props.cart)
+
+    // const {data} = await axios.get('/secret')
+    // console.log(data)
+
+    // const result = await stripe.confirmCardPayment(data.client_secret, {
+    //   paymentMethod: {
+    //     card: elements.getElement(CardElement),
+    //     billingDetails: {
+    //       name: 'Jenny Rosen',
+    //     },
+    //   },
+    // })
+
+    // if (result.error) {
+    //   console.log('[error]')
+    // } else {
+    //   console.log('success')
+    // }
   }
 
   render() {
-    console.log(this.props.stripe)
     return (
       <div>
         <form onSubmit={this.handleSubmit}>
@@ -99,10 +111,23 @@ class Checkout extends Component {
           <button type="submit" disabled={!this.props.stripe}>
             Pay
           </button>
+          {this.state.completed ? (
+            <div>
+              Order Complete <Link to="/home">Return Home</Link>
+            </div>
+          ) : null}
         </form>
       </div>
     )
   }
 }
 
-export default connect(null, null)(Checkout)
+const mapState = state => ({
+  cart: state.cart
+})
+
+const mapDispatch = dispatch => ({
+  checkout: order => dispatch(checkout(order))
+})
+
+export default connect(mapState, mapDispatch)(Checkout)

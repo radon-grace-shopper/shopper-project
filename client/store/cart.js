@@ -3,6 +3,7 @@ import axios from 'axios'
 const SET_ORDERS = 'SET_ORDERS'
 const DELETE_ORDER = 'DELETE_ORDER'
 const UPDATE_QUANTITY = 'UPDATE_QUANTITY'
+const COMPLETE_ORDER = 'COMPLETE_ORDER'
 
 const setOrders = orders => ({
   type: SET_ORDERS,
@@ -35,6 +36,11 @@ export const getSessionOrders = () => {
     }
   }
 }
+const completeOrder = order => ({
+  type: COMPLETE_ORDER,
+  order
+})
+
 export const getOrders = id => {
   return async dispatch => {
     try {
@@ -44,6 +50,20 @@ export const getOrders = id => {
       dispatch(setOrders(destructuredData))
     } catch (err) {
       console.log('ERROR GETTING ORDERS', err)
+    }
+  }
+}
+
+export const checkout = order => {
+  return async dispatch => {
+    try {
+      await axios.put(`/api/orders/${order.id}`, order)
+      order.products.forEach(async product => {
+        await axios.put(`/api/products/${product.id}`, product)
+      })
+      dispatch(completeOrder(order))
+    } catch (err) {
+      console.log('ERROR CHECKING OUT', err)
     }
   }
 }
@@ -117,6 +137,8 @@ export default function(state = {}, action) {
           }
         })
       }
+    case COMPLETE_ORDER:
+      return action.order
 
     default:
       return state

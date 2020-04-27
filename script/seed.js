@@ -23,6 +23,7 @@ async function seed() {
     description: faker.lorem.paragraph(),
     imageUrl: faker.image.food(),
     price: faker.commerce.price(),
+    inventory: faker.random.number(),
     category: 'ice cream'
   })
 
@@ -53,6 +54,7 @@ async function seed() {
       description: faker.lorem.paragraph(),
       // imageUrl: faker.image.food(),
       price: faker.commerce.price(),
+      inventory: faker.random.number(),
       category: 'ice cream'
     })
   }
