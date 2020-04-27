@@ -68,18 +68,32 @@ router.post('/user/addToCart', async (req, res, next) => {
     const [order] = await Order.findOrCreate({
       where: {userId: req.user.id, status: 'cart'}
     })
-    const orderProduct = await OrderProduct.findOrCreate({
+
+    //have it try to find one that already exists
+    // if it does, update the quantity
+    // else create one with a quantity of one
+    const [orderProduct] = await OrderProduct.findAll({
       where: {
         orderId: order.id,
         productId: req.body.productId,
         purchasePrice: req.body.price
       }
     })
-
-    await orderProduct[0].update({
-      quantity: Sequelize.literal(`quantity+${req.body.quantity}`)
-    })
-
+    // console.log(orderProduct.orderId)
+    if (orderProduct) {
+      console.log('got here')
+      await orderProduct.update({
+        quantity: Sequelize.literal(`quantity+${req.body.quantity}`)
+      })
+    } else {
+      console.log('got here with', req.body, order.id)
+      const newOrderProduct = await OrderProduct.create({
+        orderId: order.id,
+        productId: req.body.productId,
+        purchasePrice: req.body.price,
+        quantity: req.body.quantity
+      })
+    }
     // await Product.update(
     //   {inventory: Sequelize.literal(`inventory-${req.body.quantity}`)},
     //   {
