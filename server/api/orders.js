@@ -14,9 +14,14 @@ router.get('/', isAdmin, async (req, res, next) => {
   }
 })
 
-router.get('/:id', async (req, res, next) => {
+router.get('/session', async (req, res, next) => {
   try {
-    const order = await Order.findByPk(req.params.id, {include: Product})
+    console.log(req.session)
+    const order = await Order.findAll({
+      where: {id: req.session.order.id},
+      include: Product
+    })
+    console.log(order)
     res.json(order)
   } catch (err) {
     next(err)
@@ -29,6 +34,7 @@ router.get('/user/:userId', isSpecificUser, async (req, res, next) => {
       where: {userId: req.params.userId, status: 'cart'},
       include: Product
     })
+    console.log(orders)
     res.json(orders)
   } catch (err) {
     next(err)

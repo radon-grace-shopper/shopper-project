@@ -20,11 +20,27 @@ const updateQuantityAction = orderProduct => ({
   orderProduct
 })
 
+export const getSessionOrders = () => {
+  return async dispatch => {
+    try {
+      const {data} = await axios.get(`/api/orders/session`)
+      const [destructuredData] = data
+      console.log(
+        'this is destructured data in session orders',
+        destructuredData
+      )
+      dispatch(setOrders(destructuredData))
+    } catch (err) {
+      console.log('ERROR GETTING SESSION ORDERS', err)
+    }
+  }
+}
 export const getOrders = id => {
   return async dispatch => {
     try {
       const {data} = await axios.get(`/api/orders/user/${id}`)
       const [destructuredData] = data
+      console.log('this is destructured data in user orders', destructuredData)
       dispatch(setOrders(destructuredData))
     } catch (err) {
       console.log('ERROR GETTING ORDERS', err)
