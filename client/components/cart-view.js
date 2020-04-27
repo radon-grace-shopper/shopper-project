@@ -1,6 +1,11 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {deleteOrder, getOrders, updateQuantity} from '../store/cart'
+import {
+  deleteOrder,
+  getOrders,
+  updateQuantity,
+  getSessionOrders
+} from '../store/cart'
 
 import {me} from '../store/user'
 
@@ -16,17 +21,23 @@ class CartView extends Component {
   componentDidMount() {
     console.log(this.props.user)
     if (this.props.user.id) {
-      // console.log('ran the if')
+      console.log('ran the if')
       this.props.getOrders(this.props.user.id)
     } else {
-      // console.log('we ran this')
+      console.log('we ran this')
       this.definingUser()
       // console.log('already ran getOrders')
     }
   }
   async definingUser() {
     const holdUp = await this.props.me()
-    this.props.getOrders(this.props.user.id)
+    if (this.props.user.id) {
+      console.log('getting user orders')
+      this.props.getOrders(this.props.user.id)
+    } else {
+      console.log('got to requesting session')
+      this.props.getSessionOrders()
+    }
   }
 
   render() {
@@ -91,7 +102,8 @@ const mapDispatch = dispatch => ({
   me: () => dispatch(me()),
   getOrders: id => dispatch(getOrders(id)),
   updateQuantity: (orderProduct, quantity) =>
-    dispatch(updateQuantity(orderProduct, quantity))
+    dispatch(updateQuantity(orderProduct, quantity)),
+  getSessionOrders: () => dispatch(getSessionOrders())
 })
 
 export default connect(mapState, mapDispatch)(CartView)
