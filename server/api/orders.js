@@ -14,9 +14,14 @@ router.get('/', isAdmin, async (req, res, next) => {
   }
 })
 
-router.get('/:id', async (req, res, next) => {
+router.get('/session', async (req, res, next) => {
   try {
-    const order = await Order.findByPk(req.params.id, {include: Product})
+    console.log(req.session)
+    const order = await Order.findAll({
+      where: {id: req.session.order.id},
+      include: Product
+    })
+    console.log(order)
     res.json(order)
   } catch (err) {
     next(err)
@@ -29,6 +34,7 @@ router.get('/user/:userId', isSpecificUser, async (req, res, next) => {
       where: {userId: req.params.userId, status: 'cart'},
       include: Product
     })
+    console.log(orders)
     res.json(orders)
   } catch (err) {
     next(err)
@@ -65,44 +71,106 @@ router.delete('/:id', async (req, res, next) => {
 router.post('/user/addToCart', async (req, res, next) => {
   try {
     console.log('Reached Add to Cart POST route')
-    const [order] = await Order.findOrCreate({
-      where: {userId: req.user.id, status: 'cart'}
-    })
+    if (!req.user) {
+      if (!req.session.order) {
+        const order = await Order.create({
+          status: 'cart'
+        })
+        req.session.order = order
+        console.log(req.session)
+        const [orderProduct] = await OrderProduct.findAll({
+          where: {
+            orderId: req.session.order.id,
+            productId: req.body.productId,
+            purchasePrice: req.body.price
+          }
+        })
+        if (orderProduct) {
+          console.log('got here on session')
+          await orderProduct.update({
+            quantity: Sequelize.literal(`quantity+${req.body.quantity}`)
+          })
+        } else {
+          console.log(
+            'got here on session with',
+            req.body,
+            req.session.order.id
+          )
+          const newOrderProduct = await OrderProduct.create({
+            orderId: req.session.order.id,
+            productId: req.body.productId,
+            purchasePrice: req.body.price,
+            quantity: req.body.quantity
+          })
+        }
+      } else {
+        console.log('session order exists')
+        const [orderProduct] = await OrderProduct.findAll({
+          where: {
+            orderId: req.session.order.id,
+            productId: req.body.productId,
+            purchasePrice: req.body.price
+          }
+        })
+        if (orderProduct) {
+          console.log('got here on session')
+          await orderProduct.update({
+            quantity: Sequelize.literal(`quantity+${req.body.quantity}`)
+          })
+        } else {
+          console.log(
+            'got here on session with',
+            req.body,
+            req.session.order.id
+          )
+          const newOrderProduct = await OrderProduct.create({
+            orderId: req.session.order.id,
+            productId: req.body.productId,
+            purchasePrice: req.body.price,
+            quantity: req.body.quantity
+          })
+        }
+      }
+    } else {
+      const [order] = await Order.findOrCreate({
+        where: {userId: req.user.id, status: 'cart'}
+      })
+      const [orderProduct] = await OrderProduct.findAll({
+        where: {
+          orderId: order.id,
+          productId: req.body.productId,
+          purchasePrice: req.body.price
+        }
+      })
+      // console.log(orderProduct.orderId)
+      if (orderProduct) {
+        console.log('got here')
+        await orderProduct.update({
+          quantity: Sequelize.literal(`quantity+${req.body.quantity}`)
+        })
+      } else {
+        console.log('got here with', req.body, order.id)
+        const newOrderProduct = await OrderProduct.create({
+          orderId: order.id,
+          productId: req.body.productId,
+          purchasePrice: req.body.price,
+          quantity: req.body.quantity
+        })
+      }
+      // await Product.update(
+      //   {inventory: Sequelize.literal(`inventory-${req.body.quantity}`)},
+      //   {
+      //     where: {
+      //       id: req.body.productId
+      //     }
+      //   }
+      // )
+      res.status(204).end()
+    }
 
     //have it try to find one that already exists
     // if it does, update the quantity
     // else create one with a quantity of one
-    const [orderProduct] = await OrderProduct.findAll({
-      where: {
-        orderId: order.id,
-        productId: req.body.productId,
-        purchasePrice: req.body.price
-      }
-    })
-    // console.log(orderProduct.orderId)
-    if (orderProduct) {
-      console.log('got here')
-      await orderProduct.update({
-        quantity: Sequelize.literal(`quantity+${req.body.quantity}`)
-      })
-    } else {
-      console.log('got here with', req.body, order.id)
-      const newOrderProduct = await OrderProduct.create({
-        orderId: order.id,
-        productId: req.body.productId,
-        purchasePrice: req.body.price,
-        quantity: req.body.quantity
-      })
-    }
-    // await Product.update(
-    //   {inventory: Sequelize.literal(`inventory-${req.body.quantity}`)},
-    //   {
-    //     where: {
-    //       id: req.body.productId
-    //     }
-    //   }
-    // )
-    res.status(204).end()
   } catch (err) {
     next(err)
   }
