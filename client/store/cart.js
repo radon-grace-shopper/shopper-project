@@ -77,17 +77,17 @@ export default function(state = {}, action) {
       }
 
     case UPDATE_QUANTITY:
-      const testproducts = state.products.map(product => {
-        if (product.id === action.orderProduct.productId) {
-          return {
-            ...product,
-            orderProduct: action.orderProduct
-          }
-        } else {
-          return product
-        }
-      })
-      console.log(testproducts)
+      // const testproducts = state.products.map((product) => {
+      //   if (product.id === action.orderProduct.productId) {
+      //     return {
+      //       ...product,
+      //       orderProduct: action.orderProduct,
+      //     }
+      //   } else {
+      //     return product
+      //   }
+      // })
+      // console.log(testproducts)
       return {
         ...state,
         products: state.products.map(product => {

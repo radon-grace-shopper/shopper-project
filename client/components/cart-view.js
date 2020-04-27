@@ -5,6 +5,7 @@ import {deleteOrder, getOrders, updateQuantity} from '../store/cart'
 import {me} from '../store/user'
 
 import CartedProduct from './carted-product'
+import {Link} from 'react-router-dom'
 
 class CartView extends Component {
   constructor() {
@@ -72,6 +73,7 @@ class CartView extends Component {
               // </div>
             ))}
           </div>
+          <Link to="/checkout">Checkout</Link>
         </div>
       )
     }
