@@ -33,21 +33,19 @@ class Checkout extends Component {
       return
     }
 
-    // Get a reference to a mounted CardElement. Elements knows how
-    // to find your CardElement because there can only ever be one of
-    // each type of element.
-    const cardElement = elements.getElement(CardElement)
-
-    // Use your card Element with other Stripe.js APIs
-    const {error, paymentMethod} = await stripe.createPaymentMethod({
-      type: 'card',
-      card: cardElement
+    const result = await stripe.confirmCardPayment('{CLIENT_SECRET}', {
+      paymentMethod: {
+        card: elements.getElement(CardElement),
+        billingDetails: {
+          name: 'Jenny Rosen'
+        }
+      }
     })
 
-    if (error) {
-      console.log('[error]', error)
+    if (result.error) {
+      console.log('[error]', result.error.message)
     } else {
-      console.log('[PaymentMethod]', paymentMethod)
+      console.log('success')
     }
   }
 
