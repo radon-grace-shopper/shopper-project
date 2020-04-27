@@ -6,6 +6,9 @@ import {getOrders} from '../store/cart'
 class addToCart extends React.Component {
   constructor() {
     super()
+    this.state = {
+      clicked: false
+    }
 
     this.handleSubmit = this.handleSubmit.bind(this)
   }
@@ -13,10 +16,12 @@ class addToCart extends React.Component {
   async handleSubmit(event) {
     event.preventDefault()
     console.log('Add to cart was clicked')
+    this.setState({clicked: true})
     const userId = this.props.user.id
     const order = {
       productId: this.props.productId,
-      quantity: this.props.quantity
+      quantity: this.props.quantity,
+      price: this.props.price
     }
     await axios.post(`/api/orders/user/addToCart`, order)
     this.props.getOrders(userId)
@@ -25,7 +30,30 @@ class addToCart extends React.Component {
   render() {
     return (
       <form onSubmit={this.handleSubmit}>
-        <button type="submit">Add To Cart</button>
+        <button type="submit" className="addToCart">
+          Add to Cart
+        </button>
+        <div id="cartMessage">
+          {this.state.clicked ? (
+            <p>
+              Item was added to Cart!
+              <button
+                type="button"
+                onClick={() => {
+                  this.setState({clicked: false})
+                }}
+              >
+                x
+              </button>
+            </p>
+          ) : (
+            <p>
+              <button className="notVisible" type="button">
+                x
+              </button>
+            </p>
+          )}
+        </div>
       </form>
     )
   }

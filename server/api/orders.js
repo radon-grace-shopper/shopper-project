@@ -68,19 +68,26 @@ router.post('/user/addToCart', async (req, res, next) => {
     const [order] = await Order.findOrCreate({
       where: {userId: req.user.id, status: 'cart'}
     })
-    await OrderProduct.create({
-      orderId: order.id,
-      productId: req.body.productId,
-      quantity: req.body.quantity
-    })
-    await Product.update(
-      {inventory: Sequelize.literal(`inventory-${req.body.quantity}`)},
-      {
-        where: {
-          id: req.body.productId
-        }
+    const orderProduct = await OrderProduct.findOrCreate({
+      where: {
+        orderId: order.id,
+        productId: req.body.productId,
+        purchasePrice: req.body.price
       }
-    )
+    })
+
+    await orderProduct[0].update({
+      quantity: Sequelize.literal(`quantity+${req.body.quantity}`)
+    })
+
+    // await Product.update(
+    //   {inventory: Sequelize.literal(`inventory-${req.body.quantity}`)},
+    //   {
+    //     where: {
+    //       id: req.body.productId
+    //     }
+    //   }
+    // )
     res.status(204).end()
   } catch (err) {
     next(err)
