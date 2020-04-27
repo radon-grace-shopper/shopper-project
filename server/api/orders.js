@@ -77,6 +77,7 @@ router.post('/user/addToCart', async (req, res, next) => {
           status: 'cart'
         })
         req.session.order = order
+        console.log(req.session)
         const [orderProduct] = await OrderProduct.findAll({
           where: {
             orderId: req.session.order.id,
