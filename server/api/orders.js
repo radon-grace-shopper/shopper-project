@@ -68,6 +68,27 @@ router.delete('/:id', async (req, res, next) => {
   }
 })
 
+/*
+
+  if(req.user)
+    - means user is logged in
+    - follow code for adding products to cart for logged in user
+  else
+    - means user is guest
+    - check to see if req.session.order exists
+      - if req.session.order does not exist:
+        - create order for guest (userId will be NULL) --> const newOrder = Order.create({...})
+        - attach order's id to req.session.order --> req.session.order = newOrder.id
+        - create row in OrderProduct table using order's id, product's id, and specified quantity (if applicable)
+      - else
+        - means an order was already created for this guest
+        - grab guest order's from req.session.order --> const guestOrderId = req.session.order
+        - create row in OrderProduct table using order's id, product's id, and specified quantity (if applicable)
+
+
+  can take a similar approach as above when grabbing a user's cart
+
+*/
 router.post('/user/addToCart', async (req, res, next) => {
   try {
     console.log('Reached Add to Cart POST route')
