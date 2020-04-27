@@ -12,7 +12,8 @@ const OrderProduct = db.define('orderProduct', {
   },
   quantity: {
     type: Sequelize.INTEGER,
-    allowNull: false
+    allowNull: false,
+    defaultValue: 1
   },
   purchasePrice: {
     type: Sequelize.DECIMAL(10, 2),
