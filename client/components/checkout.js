@@ -44,23 +44,20 @@ class Checkout extends Component {
 
     this.props.checkout(this.props.cart)
 
-    // const {data} = await axios.get('/secret')
-    // console.log(data)
+    var response = await axios.get('/secret')
+    console.log(response)
+    const result = await stripe.confirmCardPayment(
+      response.data.client_secret,
+      {}
+    )
+    console.log(result)
 
-    // const result = await stripe.confirmCardPayment(data.client_secret, {
-    //   paymentMethod: {
-    //     card: elements.getElement(CardElement),
-    //     billingDetails: {
-    //       name: 'Jenny Rosen',
-    //     },
-    //   },
-    // })
-
-    // if (result.error) {
-    //   console.log('[error]')
-    // } else {
-    //   console.log('success')
-    // }
+    if (result.error) {
+      console.log('[error]')
+    } else {
+      this.setState({completed: true})
+      console.log('success')
+    }
   }
 
   render() {
