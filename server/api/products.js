@@ -26,7 +26,7 @@ router.get('/:id', async (req, res, next) => {
 router.put('/:id', isAdmin, async (req, res, next) => {
   try {
     console.log(req.params.id)
-    const updatedProduct = Product.update(req.body, {
+    const updatedProduct = await Product.update(req.body, {
       where: {
         id: req.params.id
       }
@@ -39,6 +39,7 @@ router.put('/:id', isAdmin, async (req, res, next) => {
 })
 
 router.delete('/:id', isAdmin, async (req, res, next) => {
+  console.log('Reached product DELETE route')
   try {
     await Product.destroy({
       where: {
@@ -52,8 +53,9 @@ router.delete('/:id', isAdmin, async (req, res, next) => {
 })
 
 router.post('/', isAdmin, async (req, res, next) => {
+  console.log('Reaching POST product route')
   try {
-    newProduct = await Product.create({
+    const newProduct = await Product.create({
       name: req.body.name,
       description: req.body.description,
       price: req.body.price,
