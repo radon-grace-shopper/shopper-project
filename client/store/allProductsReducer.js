@@ -3,6 +3,7 @@ import axios from 'axios'
 const GET_PRODUCTS = 'GET_PRODUCTS'
 const DELETE_PRODUCT = 'DELETE_PRODUCT'
 const ADD_PRODUCT = 'ADD_PRODUCT'
+const UPDATE_PRODUCT = 'UPDATE_PRODUCT'
 
 const getProducts = products => {
   return {
@@ -21,6 +22,13 @@ const deleteProduct = productId => {
 const addProduct = product => {
   return {
     type: ADD_PRODUCT,
+    product
+  }
+}
+
+const updateProduct = product => {
+  return {
+    type: UPDATE_PRODUCT,
     product
   }
 }
@@ -58,12 +66,28 @@ export const postProduct = product => {
   }
 }
 
+export const modifyProduct = product => {
+  return async dispatch => {
+    try {
+      const {data} = await axios.put(`/api/products/${product.id}`, product)
+      dispatch(updateProduct(data))
+    } catch (err) {
+      console.log('error updating product', err)
+    }
+  }
+}
+
 export default function allProductsReducer(state = [], action) {
   switch (action.type) {
     case GET_PRODUCTS:
       return action.products
     case ADD_PRODUCT:
       return [...state, action.product]
+    case UPDATE_PRODUCT:
+      const updatedProducts = state.filter(pdt => {
+        return pdt.id !== action.product.id
+      })
+      return [...updatedProducts, action.product]
     case DELETE_PRODUCT:
       const newProducts = state.filter(pdt => {
         return pdt.id !== action.productId
