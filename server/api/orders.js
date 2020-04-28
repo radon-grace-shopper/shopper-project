@@ -29,7 +29,7 @@ router.get('/session', async (req, res, next) => {
       where: {id: req.session.order, status: 'cart'},
       include: Product
     })
-    console.log('this is order', order)
+    // console.log('this is order', order)
     res.json(order)
   } catch (err) {
     next(err)
@@ -42,7 +42,7 @@ router.get('/user/:userId', isSpecificUser, async (req, res, next) => {
       where: {userId: req.params.userId, status: 'cart'},
       include: Product
     })
-    console.log('this is the orders we send back', orders)
+    // console.log('this is the orders we send back', orders)
     res.json(orders)
   } catch (err) {
     next(err)

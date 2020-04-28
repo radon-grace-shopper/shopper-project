@@ -41,13 +41,57 @@ const completeOrder = order => ({
   order
 })
 
+export async function formatData(data) {
+  const sendUpdate = {orderId: data[0].id}
+  for (let i = 0; i < data[1].products.length; i++) {
+    const resTwo = await axios.put(
+      `/api/orderProducts/${data[1].id}/${data[1].products[i].id}`,
+      sendUpdate
+    )
+  }
+  await axios.put(`/api/orders/${data[1].id}`, {status: 'completed'})
+}
+//   await axios.put(`/api/orders/${data[1].id}`, {status:'completed'})
+//   // const nextRes = await axios.get(`/api/orders/user/${data[0].userId}`)
+//   // const orders = nextRes.data
+//   // console.log(orders)
+//   // const [destructuredOrders] = orders
+//   // return destructuredOrders
+// }
+// async function getThemAgain(id){
+//   try{
+//     const res = await axios.get(`/api/orders/user/${id}`)
+//     const {data} = res
+//     const [destructuredData] = data
+//         console.log(destructuredData)
+//         dispatch(setOrders(destructuredData))
+//   }
+//   catch(err){
+
+//   }
+// }
 export const getOrders = id => {
   return async dispatch => {
     try {
-      const {data} = await axios.get(`/api/orders/user/${id}`)
+      const res = await axios.get(`/api/orders/user/${id}`)
+      console.log(res)
+      const {data} = res
+      // if(data.length>1){
+      //     // const sendUpdate = {orderId:data[0].id}
+      //     // for(let i = 0; i< data[1].products.length;i++){
+      //     //   const resTwo = await axios.put(`/api/orderProducts/${data[1].id}/${data[1].products[i]}`,sendUpdate)
+      //   // const sendOrders = formatData(data)
+      //     formatData(data)
+      //     getThemAgain(data[0].userId)
+      //   }
+
+      // else{
+      console.log('not dealing with any of that')
       const [destructuredData] = data
-      console.log('this is destructured data in user orders', destructuredData)
+      console.log(destructuredData)
+      // console.log('this is destructured data in user orders', destructuredData)
       dispatch(setOrders(destructuredData))
+      // }
     } catch (err) {
       console.log('ERROR GETTING ORDERS', err)
     }

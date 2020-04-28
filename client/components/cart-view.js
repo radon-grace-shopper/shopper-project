@@ -4,7 +4,8 @@ import {
   deleteOrder,
   getOrders,
   updateQuantity,
-  getSessionOrders
+  getSessionOrders,
+  formatData
 } from '../store/cart'
 
 import {me} from '../store/user'
@@ -19,26 +20,33 @@ class CartView extends Component {
     this.definingUser = this.definingUser.bind(this)
   }
   componentDidMount() {
-    // console.log(this.props.user)
-    // if (this.props.user.id) {
-    //   console.log('ran the if')
-    //   this.props.getOrders(this.props.user.id)
-    // } else {
-    //   console.log('we ran this')
-    //   this.definingUser()
-    //   // console.log('already ran getOrders')
-    // }
     this.definingUser()
   }
+  // async formatData(data){
+  //   if(data.length>1){
+  //     console.log('actually doing this')
+  //     const sendUpdate = {orderId:data[0].id}
+  //     for(let i = 0; i< data[1].products.length;i++){
+  //       const resTwo = await axios.put(`/api/orderProducts/${data[1].id}/${data[1].products[i].id}`,sendUpdate)
+
+  //     }
+  //     await axios.put(`/api/orders/${data[1].id}`, {status:'completed'})
+  //   }
+
+  //   }
   async definingUser() {
     const holdUp = await this.props.me()
     if (this.props.user.id) {
       console.log('getting user orders')
       await this.props.getSessionOrders()
+      console.log(this.props.cart, formatData)
+      await formatData(this.props.cart)
+      console.log('should have seen formatData by now')
       await this.props.getOrders(this.props.user.id)
     } else {
       console.log('got to requesting session')
-      this.props.getSessionOrders()
+      await this.props.getSessionOrders()
+      console.log(this.props.cart)
     }
 
     // if(this.props.user.id){
