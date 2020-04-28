@@ -61,7 +61,11 @@ class CartView extends Component {
     // console.log('this is props.cart', this.props.cart)
     if (!this.props.cart.products) {
       // console.log('got here')
-      return <h3>loading</h3>
+      return (
+        <div className="spinner-border text-primary" role="status">
+          <h3 className="sr-only">loading</h3>
+        </div>
+      )
     } else {
       // console.log(
       //   'broke the rules and got here even though this.props.cart:',
@@ -69,7 +73,7 @@ class CartView extends Component {
       // )
 
       return (
-        <div>
+        <div className="container">
           <div key={this.props.cart.id}>
             {this.props.cart.products.map(product => (
               <CartedProduct key={product.id} products={product} />
@@ -101,7 +105,9 @@ class CartView extends Component {
               // </div>
             ))}
           </div>
-          <Link to="/checkout">Checkout</Link>
+          <Link className="btn btn-primary btn-lg" to="/checkout">
+            Checkout
+          </Link>
         </div>
       )
     }

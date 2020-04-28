@@ -62,23 +62,27 @@ class singleProduct extends React.Component {
   }
 
   render() {
-    console.log('Props', this.props)
     if (!this.props.product.name) {
-      return <h2>Loading...</h2>
+      return (
+        <div className="spinner-border text-primary">
+          <h2 className="sr-only">Loading...</h2>
+        </div>
+      )
     }
 
     return (
-      <div className="singleProduct">
-        <h2>{this.props.product.name}</h2>
-        <h4>Average Rating: {this.calculateReviews()}</h4>
-        <img className="defaultIceCream" src={this.props.product.imageUrl} />
-        <div>${this.props.product.price}</div>
-        <p>{this.props.product.description}</p>
+      <div className="container">
+        <br />
+        <div className="jumbotron">
+          <h2>{this.props.product.name}</h2>
+          <img className="defaultIceCream" src={this.props.product.imageUrl} />
+          <div>${this.props.product.price}</div>
+          <p>{this.props.product.description}</p>
+          <a>Average Rating: {this.calculateReviews()}</a>
 
-        <div>
           {this.props.product.inventory ? (
             <div className="quantity">
-              <label htmlFor="quantity">Quantity: </label>
+              <label htmlFor="quantity">Quantity:</label>
               <input
                 type="number"
                 name="quantity"
@@ -101,6 +105,7 @@ class singleProduct extends React.Component {
             </h4>
           )}
         </div>
+
         <hr />
         <div>
           <h3>Reviews</h3>
@@ -123,7 +128,9 @@ class singleProduct extends React.Component {
                 <option value={4}>4</option>
                 <option value={5}>5</option>
               </select>
-              <button type="submit">Submit Review</button>
+              <button type="submit" className="btn btn-primary">
+                Submit Review
+              </button>
             </form>
           ) : (
             <div>Please log in if you would like to leave a review</div>
@@ -132,11 +139,16 @@ class singleProduct extends React.Component {
           <div>
             {this.props.product.reviews.length >= 1 ? (
               this.props.product.reviews.map(review => (
-                <div key={review.id}>
-                  <div>Reviewed by: {'Loading' && review.user.email}</div>
-                  <div>Rating: {review.rating}/5</div>
-                  <div>{review.content}</div>
-                  <br />
+                <div className="card" key={review.id}>
+                  <div className="card-body">
+                    <h5 className="card-title">
+                      Reviewed by: {'Loading' && review.user.email}
+                    </h5>
+                    <a>Rating: {review.rating}/5</a>
+                    <p className="card-text">{review.content}</p>
+                    <div />
+                    <br />
+                  </div>
                 </div>
               ))
             ) : (
