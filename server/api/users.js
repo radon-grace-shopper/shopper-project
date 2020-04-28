@@ -9,9 +9,50 @@ router.get('/', isAdmin, async (req, res, next) => {
       // explicitly select only the id and email fields - even though
       // users' passwords are encrypted, it won't help if we just
       // send everything to anyone who asks!
-      attributes: ['id', 'email']
+      attributes: ['id', 'email', 'isAdmin']
     })
     res.json(users)
+  } catch (err) {
+    next(err)
+  }
+})
+
+router.get('/:id', async (req, res, next) => {
+  console.log('Got to GET route for ind user')
+  try {
+    const user = await User.findByPk(req.params.id)
+    res.json(user)
+    res.status(204).end()
+  } catch (err) {
+    next(err)
+  }
+})
+
+router.put('/:id', async (req, res, next) => {
+  console.log('Reached PUT user route')
+  try {
+    console.log('BOYD', req.body)
+    const updatedUser = await User.update(req.body, {
+      where: {
+        id: req.params.id
+      }
+    })
+    res.json(updatedUser)
+    res.status(204).end()
+  } catch (err) {
+    next(err)
+  }
+})
+
+router.delete('/:id', isAdmin, async (req, res, next) => {
+  console.log('Reached DELETE user route')
+  try {
+    await User.destroy({
+      where: {
+        id: req.params.id
+      }
+    })
+    res.status(204).end()
   } catch (err) {
     next(err)
   }

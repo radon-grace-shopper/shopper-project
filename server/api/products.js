@@ -25,7 +25,6 @@ router.get('/:id', async (req, res, next) => {
 
 router.put('/:id', isAdmin, async (req, res, next) => {
   try {
-    console.log(req.params.id)
     const updatedProduct = await Product.update(req.body, {
       where: {
         id: req.params.id
