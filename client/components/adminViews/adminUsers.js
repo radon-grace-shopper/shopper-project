@@ -25,7 +25,7 @@ class adminUsers extends React.Component {
   }
 
   render() {
-    console.log('PROPS', this.props)
+    // console.log('PROPS', this.props)
     return (
       <div>
         {this.props.user.isAdmin === false ? (
@@ -52,7 +52,7 @@ class adminUsers extends React.Component {
                       <td>{user.id}</td>
                       <td>{user.email}</td>
                       <td>
-                        <AdminEditUser user={user} />
+                        <AdminEditUser key={user.id} user={user} />
                       </td>
                       <td>
                         <button

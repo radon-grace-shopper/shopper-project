@@ -17,9 +17,21 @@ router.get('/', isAdmin, async (req, res, next) => {
   }
 })
 
+router.get('/:id', async (req, res, next) => {
+  console.log('Got to GET route for ind user')
+  try {
+    const user = await User.findByPk(req.params.id)
+    res.json(user)
+    res.status(204).end()
+  } catch (err) {
+    next(err)
+  }
+})
+
 router.put('/:id', async (req, res, next) => {
   console.log('Reached PUT user route')
   try {
+    console.log('BOYD', req.body)
     const updatedUser = await User.update(req.body, {
       where: {
         id: req.params.id
