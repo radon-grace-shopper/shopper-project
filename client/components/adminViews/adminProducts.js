@@ -13,9 +13,9 @@ class AdminProducts extends React.Component {
     this.props.getProducts()
   }
 
-  onEdit(event) {
-    // this.props.history.push(`/admin/products/edit/${event.target.value}`)
-  }
+  // onEdit(event) {
+  //   // this.props.history.push(`/admin/products/edit/${event.target.value}`)
+  // }
 
   async deleteProduct(event) {
     const productId = event.target.value
