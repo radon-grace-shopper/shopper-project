@@ -35,7 +35,6 @@ class Checkout extends Component {
       // form submission until Stripe.js has loaded.
       return
     }
-    console.log('HELLLLLLOOOOOOOOO')
 
     this.props.cart.status = 'completed'
     this.props.cart.products.map(product => {
@@ -66,10 +65,11 @@ class Checkout extends Component {
 
   render() {
     return (
-      <div>
+      <div className="container">
         <form onSubmit={this.handleSubmit}>
           <label htmlFor="name">Name:</label>
           <input
+            className="form-control"
             id="name"
             name="name"
             type="text"
@@ -78,6 +78,7 @@ class Checkout extends Component {
           />
           <label htmlFor="email">E-mail:</label>
           <input
+            className="form-control"
             id="email"
             name="email"
             type="email"
@@ -86,6 +87,7 @@ class Checkout extends Component {
           />
           <label htmlFor="address">Address:</label>
           <input
+            className="form-control"
             id="address"
             name="address"
             type="text"
@@ -108,11 +110,15 @@ class Checkout extends Component {
               }
             }}
           />
-          <button type="submit" disabled={!this.props.stripe}>
+          <button
+            type="submit"
+            disabled={!this.props.stripe}
+            className="btn btn-primary"
+          >
             Pay
           </button>
           {this.state.completed ? (
-            <div>
+            <div className="alert alert-primary" role="alert">
               Order Complete <Link to="/home">Return Home</Link>
             </div>
           ) : null}

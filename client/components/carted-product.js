@@ -30,31 +30,33 @@ class CartedProduct extends Component {
     if (this.props.products) {
       return (
         <form>
-          <div key={product.id}>
-            <h2>Name: {product.name}</h2>
-            <p>Description:{product.description}</p>
-            <img className="defaultIceCream" src={product.imageUrl} />
+          <div className="jumbotron" key={product.id}>
+            <h5 className="display-4">{product.name}</h5>
+            <div className="lead ">
+              <img className="defaultIceCream" src={product.imageUrl} />
+              <p>{product.description}</p>
+            </div>
+            <a>Price: ${product.orderProduct.quantity * product.price}</a>
             <br />
-            <a>Single Price: {product.price}</a>
-            <label htmlFor="quantity">Quantity:</label>
+            <a>Amount:</a>
             <input
               type="number"
               id="quantity"
               value={this.state.quant}
               onChange={this.handleChange}
+              min="1"
+              max={this.props.products.inventory}
             />
-            <br />
-            <a>Total Price: {product.orderProduct.quantity * product.price}</a>
             <br />
             <button
               type="button"
+              className="btn btn-primary btn-lg"
               onClick={() =>
                 this.props.deleteOrder(product.orderProduct.orderId, product.id)
               }
             >
               Remove
             </button>
-            <hr />
           </div>
         </form>
       )
