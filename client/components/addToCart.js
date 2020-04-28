@@ -30,12 +30,12 @@ class addToCart extends React.Component {
   render() {
     return (
       <form onSubmit={this.handleSubmit}>
-        <button type="submit" className="addToCart">
+        <button type="submit" className="btn btn-primary">
           Add to Cart
         </button>
         <div id="cartMessage">
           {this.state.clicked ? (
-            <p>
+            <p className="alert alert-primary">
               Item was added to Cart!
               <button
                 type="button"
