@@ -59,83 +59,95 @@ class AddProduct extends React.Component {
     console.log('add form PROPS', this.props)
     return (
       <div>
-        <Link to="/admin/products">Back</Link>
-        <form onSubmit={this.handleSubmit}>
-          <h2>Add Product Form</h2>
-          {/* <label htmlFor="id">id</label>
+        {this.props.user.isAdmin === false ? (
+          <h3>NOT AUTHORIZED</h3>
+        ) : (
+          <div>
+            <Link to="/admin/products">Back</Link>
+            <form onSubmit={this.handleSubmit}>
+              <h2>Add Product Form</h2>
+              {/* <label htmlFor="id">id</label>
         <input name="id" placeholder="id" disabled></input> */}
 
-          <label htmlFor="name">Name</label>
-          <input
-            name="name"
-            type="text"
-            placeholder="Name"
-            value={this.state.name}
-            onChange={this.handleChange}
-          />
+              <label htmlFor="name">Name</label>
+              <input
+                name="name"
+                type="text"
+                placeholder="Name"
+                value={this.state.name}
+                onChange={this.handleChange}
+              />
 
-          <label htmlFor="description">Description</label>
-          <textarea
-            name="description"
-            type="text"
-            placeholder="Description"
-            value={this.state.description}
-            onChange={this.handleChange}
-          />
+              <label htmlFor="description">Description</label>
+              <textarea
+                name="description"
+                type="text"
+                placeholder="Description"
+                value={this.state.description}
+                onChange={this.handleChange}
+              />
 
-          <label htmlFor="price">Price</label>
-          <input
-            name="price"
-            type="text"
-            placeholder="Price"
-            value={this.state.price}
-            onChange={this.handleChange}
-          />
+              <label htmlFor="price">Price</label>
+              <input
+                name="price"
+                type="text"
+                placeholder="Price"
+                value={this.state.price}
+                onChange={this.handleChange}
+              />
 
-          <label htmlFor="inventory">Inventory</label>
-          <input
-            name="inventory"
-            type="text"
-            placeholder="Inventory"
-            value={this.state.inventory}
-            onChange={this.handleChange}
-          />
+              <label htmlFor="inventory">Inventory</label>
+              <input
+                name="inventory"
+                type="text"
+                placeholder="Inventory"
+                value={this.state.inventory}
+                onChange={this.handleChange}
+              />
 
-          <label htmlFor="category">Category</label>
-          <select name="category" onChange={this.handleChange}>
-            <option value="ice cream">ice cream</option>
-            <option value="healthy">healthy</option>
-            <option value="dairy-free">dairy-free</option>
-          </select>
-          <br />
-          <button type="submit">Submit Product</button>
-          <Link to="/admin/products">
-            <button type="button">Cancel</button>
-          </Link>
-          <div>
-            {this.state.clicked ? (
-              <p>
-                Product was added to database!
-                <button
-                  type="button"
-                  onClick={() => {
-                    this.setState({clicked: false})
-                  }}
-                >
-                  x
-                </button>
-              </p>
-            ) : (
-              <p>
-                <button className="notVisible" type="button">
-                  x
-                </button>
-              </p>
-            )}
+              <label htmlFor="category">Category</label>
+              <select name="category" onChange={this.handleChange}>
+                <option value="ice cream">ice cream</option>
+                <option value="healthy">healthy</option>
+                <option value="dairy-free">dairy-free</option>
+              </select>
+              <br />
+              <button type="submit">Submit Product</button>
+              <Link to="/admin/products">
+                <button type="button">Cancel</button>
+              </Link>
+              <div>
+                {this.state.clicked ? (
+                  <p>
+                    Product was added to database!
+                    <button
+                      type="button"
+                      onClick={() => {
+                        this.setState({clicked: false})
+                      }}
+                    >
+                      x
+                    </button>
+                  </p>
+                ) : (
+                  <p>
+                    <button className="notVisible" type="button">
+                      x
+                    </button>
+                  </p>
+                )}
+              </div>
+            </form>
           </div>
-        </form>
+        )}
       </div>
     )
+  }
+}
+
+const mapState = state => {
+  return {
+    user: state.user
   }
 }
 
@@ -146,4 +158,4 @@ const mapDispatch = dispatch => {
   }
 }
 
-export default connect(null, mapDispatch)(AddProduct)
+export default connect(mapState, mapDispatch)(AddProduct)

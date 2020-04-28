@@ -19,10 +19,6 @@ class AdminDash extends React.Component {
               <h3>Welcome to the admin dashboard</h3>
               <Link to="/admin/products">Edit Products</Link>
             </nav>
-
-            {/* Link to editing products */}
-            {/* <AdminProducts products={this.props.products} /> */}
-
             {/* Link to editing users */}
           </div>
         )}
@@ -34,13 +30,7 @@ class AdminDash extends React.Component {
 const mapState = state => {
   return {
     user: state.user
-    // products: state.products,
   }
 }
-// const mapDispatch = (dispatch) => {
-//   return {
-//     getProducts: () => dispatch(fetchProducts()),
-//   }
-// }
 
 export default connect(mapState)(AdminDash)
