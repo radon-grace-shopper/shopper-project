@@ -16,12 +16,20 @@ router.get('/', isAdmin, async (req, res, next) => {
 
 router.get('/session', async (req, res, next) => {
   try {
-    console.log(req.session)
+    // console.log(req.session, 'in router.get /session')
+    if (req.user) {
+      await Order.update(
+        {userId: req.user.id},
+        {
+          where: {id: req.session.order, status: 'cart'}
+        }
+      )
+    }
     const order = await Order.findAll({
-      where: {id: req.session.order},
+      where: {id: req.session.order, status: 'cart'},
       include: Product
     })
-    console.log(order)
+    console.log('this is order', order)
     res.json(order)
   } catch (err) {
     next(err)
@@ -34,7 +42,7 @@ router.get('/user/:userId', isSpecificUser, async (req, res, next) => {
       where: {userId: req.params.userId, status: 'cart'},
       include: Product
     })
-    console.log(orders)
+    console.log('this is the orders we send back', orders)
     res.json(orders)
   } catch (err) {
     next(err)
@@ -68,6 +76,17 @@ router.delete('/:id', async (req, res, next) => {
   }
 })
 
+router.put('/user/:userId', isSpecificUser, async (req, res, next) => {
+  try {
+    const orders = await Order.update(req.body, {
+      where: {id: req.body.id, status: 'cart'}
+    })
+    console.log(orders)
+    res.json(orders)
+  } catch (err) {
+    next(err)
+  }
+})
 router.post('/user/addToCart', async (req, res, next) => {
   try {
     console.log('Reached Add to Cart POST route')

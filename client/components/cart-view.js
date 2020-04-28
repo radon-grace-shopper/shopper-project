@@ -19,25 +19,34 @@ class CartView extends Component {
     this.definingUser = this.definingUser.bind(this)
   }
   componentDidMount() {
-    console.log(this.props.user)
-    if (this.props.user.id) {
-      console.log('ran the if')
-      this.props.getOrders(this.props.user.id)
-    } else {
-      console.log('we ran this')
-      this.definingUser()
-      // console.log('already ran getOrders')
-    }
+    // console.log(this.props.user)
+    // if (this.props.user.id) {
+    //   console.log('ran the if')
+    //   this.props.getOrders(this.props.user.id)
+    // } else {
+    //   console.log('we ran this')
+    //   this.definingUser()
+    //   // console.log('already ran getOrders')
+    // }
+    this.definingUser()
   }
   async definingUser() {
     const holdUp = await this.props.me()
     if (this.props.user.id) {
       console.log('getting user orders')
-      this.props.getOrders(this.props.user.id)
+      await this.props.getSessionOrders()
+      await this.props.getOrders(this.props.user.id)
     } else {
       console.log('got to requesting session')
       this.props.getSessionOrders()
     }
+
+    // if(this.props.user.id){
+    //   this.props.getSessionOrders()
+    //   if(this.props.cart.products){
+
+    //   }
+    // }
   }
 
   render() {
