@@ -1,33 +1,26 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {editUser, fetchUsers} from '../../store/users'
-import {fetchUser} from '../../store/user'
 
 class EditAdmin extends React.Component {
   constructor(props) {
     super(props)
-    // this.state = {
-    //   admin: this.props.user.isAdmin,
-    // }
+    this.state = {
+      admin: this.props.user.isAdmin
+    }
     this.toggleAdmin = this.toggleAdmin.bind(this)
   }
-  // componentDidMount() {
-  //   // this.props.loadUser(this.props.user.id)
-  //   // this.setState({admin: this.props.user.isAdmin})
-  // }
 
   async toggleAdmin() {
     try {
-      // this.setState({admin: !this.props.user.isAdmin})
-      // let isAdmin = this.state.admin
+      let isAdmin = !this.state.admin
+      this.setState({admin: !this.props.user.isAdmin})
       const id = this.props.user.id
-      const updatedUser = {
+      let updatedUser = {
         id,
-        isAdmin: !this.props.isAdmin
+        isAdmin
       }
-      console.log('adminSTAT', updatedUser.isAdmin)
       await this.props.updateUser(updatedUser)
-      // await this.props.loadUser(id)
       await this.props.loadUsers()
     } catch (error) {
       console.log('Error updating user', error)
@@ -54,8 +47,7 @@ class EditAdmin extends React.Component {
 const mapDispatch = dispatch => {
   return {
     updateUser: user => dispatch(editUser(user)),
-    loadUsers: () => dispatch(fetchUsers()),
-    loadUser: id => dispatch(fetchUser(id))
+    loadUsers: () => dispatch(fetchUsers())
   }
 }
 
