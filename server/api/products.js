@@ -53,6 +53,7 @@ router.delete('/:id', isAdmin, async (req, res, next) => {
 })
 
 router.post('/', isAdmin, async (req, res, next) => {
+  console.log('Reaching POST product route')
   try {
     const newProduct = await Product.create({
       name: req.body.name,
