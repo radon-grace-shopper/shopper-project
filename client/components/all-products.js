@@ -20,17 +20,20 @@ class allProducts extends Component {
     this.props.getProducts()
   }
   render() {
-    console.log('these are the products on props', this.props.products)
     if (this.props.products.length === 0) {
-      return <h2>Loading...</h2>
+      return (
+        <div className="spinner-border text-primary">
+          <h2 className="sr-only">Loading...</h2>
+        </div>
+      )
     }
     if (this.state.dropDownSelect === 'all') {
-      console.log('in the all render')
       return (
-        <div>
+        <div className="container">
           <select
             value={this.state.dropDownSelect}
             onChange={this.handleChange}
+            className="btn btn-secondary dropdown-toggle"
           >
             <option value="all">all</option>
             <option value="ice cream">ice cream</option>
@@ -38,28 +41,34 @@ class allProducts extends Component {
             <option value="dairy-free">dairy-free</option>
           </select>
           <h2>All Products</h2>
-          {this.props.products.map(el => (
-            <div key={el.id}>
-              <Link to={`/products/${el.id}`}>
-                <h3>{el.name}</h3>
-              </Link>
-              <img src={el.imageUrl} />
-              <p>{el.price}</p>
-            </div>
-          ))}
+          <div className="row">
+            {this.props.products.map(el => (
+              <div className="card" style={{width: '250px'}} key={el.id}>
+                <img
+                  className="card-img-top defaultIceCream"
+                  src={el.imageUrl}
+                />
+                <div className="card-body">
+                  <Link to={`/products/${el.id}`}>
+                    <h5>{el.name}</h5>
+                  </Link>
+                  <a>${el.price}</a>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       )
     } else {
-      console.log(this.state.dropDownSelect)
       const filteredProducts = this.props.products.filter(
         el => el.category === this.state.dropDownSelect
       )
-      console.log(filteredProducts)
       return (
-        <div>
+        <div className="container">
           <select
             value={this.state.dropDownSelect}
             onChange={this.handleChange}
+            className="btn btn-secondary dropdown-toggle"
           >
             <option value="all">all</option>
             <option value="ice cream">ice cream</option>
@@ -67,15 +76,22 @@ class allProducts extends Component {
             <option value="dairy-free">dairy-free</option>
           </select>
           <h2>{this.state.dropDownSelect}</h2>
-          {filteredProducts.map(el => (
-            <div key={el.id}>
-              <Link to={`/products/${el.id}`}>
-                <h3>{el.name}</h3>
-              </Link>
-              <img src={el.imageUrl} />
-              <p>{el.price}</p>
-            </div>
-          ))}
+          <div className="row">
+            {filteredProducts.map(el => (
+              <div className="card" key={el.id}>
+                <img
+                  className="card-img-top defaultIceCream"
+                  src={el.imageUrl}
+                />
+                <div className="card-body">
+                  <Link to={`/products/${el.id}`}>
+                    <h5>{el.name}</h5>
+                  </Link>
+                  <a>{el.price}</a>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       )
     }
