@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 
 import {Link} from 'react-router-dom'
 
-class adminDash extends React.Component {
+class AdminDash extends React.Component {
   render() {
     console.log('PROPS', this.props)
     if (!this.props.user.id) {
@@ -43,4 +43,4 @@ const mapState = state => {
 //   }
 // }
 
-export default connect(mapState)(adminDash)
+export default connect(mapState)(AdminDash)

@@ -3,15 +3,25 @@ import {connect} from 'react-redux'
 import {fetchProducts} from '../../store/allProductsReducer'
 import {Link} from 'react-router-dom'
 
-class adminProducts extends React.Component {
+class AdminProducts extends React.Component {
+  constructor() {
+    super()
+    this.onEdit = this.onEdit.bind(this)
+  }
   componentDidMount() {
     this.props.getProducts()
   }
 
+  onEdit(event) {
+    // this.props.history.push(`/admin/products/edit/${event.target.value}`)
+  }
+
   render() {
+    console.log('Props', this.props)
     return (
       <div>
-        <Link to="/admin">Back</Link>
+        <Link to="/admin">Back </Link>
+        <Link to="/admin/products/add">Add a Product</Link>
         <table className="adminProducts">
           <thead>
             <tr>
@@ -39,7 +49,11 @@ class adminProducts extends React.Component {
                   <td>{pdt.inventory}</td>
                   <td>{pdt.category}</td>
                   <td>
-                    <button type="button">edit</button>
+                    <Link to="/admin/products/edit">
+                      <button type="button" value={pdt.id}>
+                        Edit
+                      </button>
+                    </Link>
                   </td>
                   <td>
                     <button type="button">delete</button>
@@ -66,4 +80,4 @@ const mapDispatch = dispatch => {
   }
 }
 
-export default connect(mapState, mapDispatch)(adminProducts)
+export default connect(mapState, mapDispatch)(AdminProducts)
