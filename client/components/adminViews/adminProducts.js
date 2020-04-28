@@ -6,7 +6,7 @@ import {Link} from 'react-router-dom'
 class AdminProducts extends React.Component {
   constructor() {
     super()
-    this.onEdit = this.onEdit.bind(this)
+    // this.onEdit = this.onEdit.bind(this)
     this.deleteProduct = this.deleteProduct.bind(this)
   }
   componentDidMount() {
@@ -60,7 +60,7 @@ class AdminProducts extends React.Component {
                   <td>{pdt.inventory}</td>
                   <td>{pdt.category}</td>
                   <td>
-                    <Link to="/admin/products/edit">
+                    <Link to={`/admin/products/edit/${pdt.id}`}>
                       <button type="button" value={pdt.id}>
                         Edit
                       </button>

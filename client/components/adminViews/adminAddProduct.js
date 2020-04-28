@@ -69,7 +69,7 @@ class AddProduct extends React.Component {
           <input
             name="name"
             type="text"
-            placeholder="name"
+            placeholder="Name"
             value={this.state.name}
             onChange={this.handleChange}
           />
@@ -78,7 +78,7 @@ class AddProduct extends React.Component {
           <textarea
             name="description"
             type="text"
-            placeholder="description"
+            placeholder="Description"
             value={this.state.description}
             onChange={this.handleChange}
           />
@@ -87,7 +87,7 @@ class AddProduct extends React.Component {
           <input
             name="price"
             type="text"
-            placeholder="price"
+            placeholder="Price"
             value={this.state.price}
             onChange={this.handleChange}
           />
@@ -96,7 +96,7 @@ class AddProduct extends React.Component {
           <input
             name="inventory"
             type="text"
-            placeholder="inventory"
+            placeholder="Inventory"
             value={this.state.inventory}
             onChange={this.handleChange}
           />
@@ -108,7 +108,7 @@ class AddProduct extends React.Component {
             <option value="dairy-free">dairy-free</option>
           </select>
           <br />
-          <button type="submit">Submit Change</button>
+          <button type="submit">Submit Product</button>
           <Link to="/admin/products">
             <button type="button">Cancel</button>
           </Link>
