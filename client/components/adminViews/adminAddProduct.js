@@ -16,6 +16,7 @@ class AddProduct extends React.Component {
     }
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleChange = this.handleChange.bind(this)
+    this.disableButton = this.disableButton.bind(this)
   }
 
   handleChange(event) {
@@ -55,8 +56,23 @@ class AddProduct extends React.Component {
     }
   }
 
+  disableButton() {
+    const {name, description, price, inventory} = this.state
+    if (
+      !name ||
+      !description ||
+      !price ||
+      !inventory ||
+      !parseInt(price, 10) ||
+      !parseInt(inventory, 10)
+    ) {
+      return true
+    }
+    return false
+  }
+
   render() {
-    console.log('add form PROPS', this.props)
+    // console.log('add form PROPS', this.props)
     return (
       <div>
         {this.props.user.isAdmin === false ? (
@@ -66,9 +82,7 @@ class AddProduct extends React.Component {
             <Link to="/admin/products">Back</Link>
             <form onSubmit={this.handleSubmit}>
               <h2>Add Product Form</h2>
-              {/* <label htmlFor="id">id</label>
-        <input name="id" placeholder="id" disabled></input> */}
-
+              <p>Please fill in all fields in order to submit a new product</p>
               <label htmlFor="name">Name</label>
               <input
                 name="name"
@@ -112,7 +126,9 @@ class AddProduct extends React.Component {
                 <option value="dairy-free">dairy-free</option>
               </select>
               <br />
-              <button type="submit">Submit Product</button>
+              <button type="submit" disabled={this.disableButton()}>
+                Submit Product
+              </button>
               <Link to="/admin/products">
                 <button type="button">Cancel</button>
               </Link>

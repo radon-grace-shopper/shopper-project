@@ -57,7 +57,7 @@ class EditProduct extends React.Component {
   }
 
   render() {
-    console.log('edit form PROPS', this.props)
+    // console.log('edit form PROPS', this.props)
     return (
       <div>
         {this.props.user.isAdmin === false ? (
@@ -67,7 +67,7 @@ class EditProduct extends React.Component {
             <Link to="/admin/products">Back</Link>
             <form onSubmit={this.handleSubmit}>
               <h2>Edit Product Form</h2>
-              <label htmlFor="id">id</label>
+              <label htmlFor="id">Id</label>
               <input name="id" placeholder={this.props.product.id} disabled />
 
               <label htmlFor="name">Name</label>

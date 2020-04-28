@@ -6,10 +6,11 @@ import {Login, Signup, UserHome, CartView, CheckoutForm} from './components'
 import {me} from './store'
 import singleProduct from './components/single-product'
 import allProducts from './components/all-products'
-import adminDash from './components/adminViews/adminDash'
-import adminProducts from './components/adminViews/adminProducts'
-import editProduct from './components/adminViews/adminEditProduct'
+import AdminDash from './components/adminViews/adminDash'
+import AdminProducts from './components/adminViews/adminProducts'
+import EditProduct from './components/adminViews/adminEditProduct'
 import AddProduct from './components/adminViews/adminAddProduct'
+import AdminUsers from './components/adminViews/adminUsers'
 
 /**
  * COMPONENT
@@ -35,13 +36,14 @@ class Routes extends Component {
           <Switch>
             {/* Routes placed here are only available after logging in */}
             <Route path="/home" component={UserHome} />
-            <Route exact path="/admin/products" component={adminProducts} />
+            <Route exact path="/admin/products" component={AdminProducts} />
             <Route
               path="/admin/products/edit/:productId"
-              component={editProduct}
+              component={EditProduct}
             />
             <Route path="/admin/products/add" component={AddProduct} />
-            <Route path="/admin" component={adminDash} />
+            <Route path="/admin/users" component={AdminUsers} />
+            <Route path="/admin" component={AdminDash} />
           </Switch>
         )}
         {/* Displays our Login component as a fallback */}

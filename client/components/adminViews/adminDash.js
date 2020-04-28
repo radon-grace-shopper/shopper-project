@@ -1,6 +1,5 @@
 import React from 'react'
 import {connect} from 'react-redux'
-
 import {Link} from 'react-router-dom'
 
 class AdminDash extends React.Component {
@@ -18,8 +17,8 @@ class AdminDash extends React.Component {
             <nav>
               <h3>Welcome to the admin dashboard</h3>
               <Link to="/admin/products">Edit Products</Link>
+              <Link to="/admin/users">Edit Users</Link>
             </nav>
-            {/* Link to editing users */}
           </div>
         )}
       </div>
