@@ -17,20 +17,24 @@ router.get('/', isAdmin, async (req, res, next) => {
 router.get('/session', async (req, res, next) => {
   try {
     // console.log(req.session, 'in router.get /session')
-    if (req.user) {
-      await Order.update(
-        {userId: req.user.id},
-        {
-          where: {id: req.session.order, status: 'cart'}
-        }
-      )
+    if (req.session.order) {
+      if (req.user) {
+        await Order.update(
+          {userId: req.user.id},
+          {
+            where: {id: req.session.order, status: 'cart'}
+          }
+        )
+      }
+      const order = await Order.findAll({
+        where: {id: req.session.order, status: 'cart'},
+        include: Product
+      })
+      // console.log('this is order', order)
+      res.json(order)
+    } else {
+      res.status(200).end()
     }
-    const order = await Order.findAll({
-      where: {id: req.session.order, status: 'cart'},
-      include: Product
-    })
-    // console.log('this is order', order)
-    res.json(order)
   } catch (err) {
     next(err)
   }

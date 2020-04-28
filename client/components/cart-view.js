@@ -37,16 +37,18 @@ class CartView extends Component {
   async definingUser() {
     const holdUp = await this.props.me()
     if (this.props.user.id) {
-      console.log('getting user orders')
       await this.props.getSessionOrders()
-      console.log(this.props.cart, formatData)
-      await formatData(this.props.cart)
-      console.log('should have seen formatData by now')
-      await this.props.getOrders(this.props.user.id)
+      if (this.props.cart.products) {
+        const sessionOrder = this.props.cart.id
+        await this.props.getOrders(this.props.user.id)
+        const userOrder = this.props.cart.id
+        await formatData(sessionOrder, userOrder)
+        await this.props.getOrders(this.props.user.id)
+      } else {
+        await this.props.getOrders(this.props.user.id)
+      }
     } else {
-      console.log('got to requesting session')
       await this.props.getSessionOrders()
-      console.log(this.props.cart)
     }
 
     // if(this.props.user.id){
@@ -105,9 +107,7 @@ class CartView extends Component {
               // </div>
             ))}
           </div>
-          <Link className="btn btn-primary btn-lg" to="/checkout">
-            Checkout
-          </Link>
+          <Link to="/checkout">Checkout</Link>
         </div>
       )
     }

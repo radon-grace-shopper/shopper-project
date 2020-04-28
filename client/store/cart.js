@@ -41,15 +41,12 @@ const completeOrder = order => ({
   order
 })
 
-export async function formatData(data) {
-  const sendUpdate = {orderId: data[0].id}
-  for (let i = 0; i < data[1].products.length; i++) {
-    const resTwo = await axios.put(
-      `/api/orderProducts/${data[1].id}/${data[1].products[i].id}`,
-      sendUpdate
-    )
-  }
-  await axios.put(`/api/orders/${data[1].id}`, {status: 'completed'})
+export async function formatData(sessionVal, userOrderVal) {
+  const {data} = await axios.get(`/api/orderProducts/${sessionVal}`)
+  const sendUpdate = {orderId: userOrderVal}
+  const resTwo = await axios.put(`/api/orderProducts/${sessionVal}`, sendUpdate)
+
+  await axios.put(`/api/orders/${sessionVal}`, {status: 'completed'})
 }
 //   await axios.put(`/api/orders/${data[1].id}`, {status:'completed'})
 //   // const nextRes = await axios.get(`/api/orders/user/${data[0].userId}`)

@@ -11,24 +11,36 @@ router.get('/', async (req, res, next) => {
   }
 })
 
-// router.put('/:orderId', async (req, res, next) => {
-//   try {
-//     console.log('hitting the put route with', req.body)
-//     await OrderProduct.update(req.body, {
-//       where: {
-//         orderId: req.params.orderId
-//       }
-//     })
-//     const [updatedProduct] = await OrderProduct.findAll({
-//       where: {
-//         orderId: req.params.orderId
-//       }
-//     })
-//     res.json(updatedProduct)
-//   } catch (err) {
-//     next(err)
-//   }
-// })
+router.get('/:orderId', async (req, res, next) => {
+  try {
+    const orderprods = await OrderProduct.findAll({
+      where: {
+        orderId: req.params.orderId
+      }
+    })
+    res.json(orderprods)
+  } catch (err) {
+    next(err)
+  }
+})
+router.put('/:orderId', async (req, res, next) => {
+  try {
+    console.log('hitting the put route with', req.body)
+    await OrderProduct.update(req.body, {
+      where: {
+        orderId: req.params.orderId
+      }
+    })
+    const [updatedProduct] = await OrderProduct.findAll({
+      where: {
+        orderId: req.params.orderId
+      }
+    })
+    res.json(updatedProduct)
+  } catch (err) {
+    next(err)
+  }
+})
 
 router.put('/:orderId/:productId', async (req, res, next) => {
   try {
