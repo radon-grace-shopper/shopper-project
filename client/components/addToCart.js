@@ -24,7 +24,9 @@ class addToCart extends React.Component {
       price: this.props.price
     }
     await axios.post(`/api/orders/user/addToCart`, order)
-    this.props.getOrders(userId)
+    if (userId) {
+      this.props.getOrders(userId)
+    }
   }
 
   render() {

@@ -18,7 +18,7 @@ router.get('/session', async (req, res, next) => {
   try {
     console.log(req.session)
     const order = await Order.findAll({
-      where: {id: req.session.order.id},
+      where: {id: req.session.order},
       include: Product
     })
     console.log(order)
@@ -72,34 +72,21 @@ router.post('/user/addToCart', async (req, res, next) => {
   try {
     console.log('Reached Add to Cart POST route')
     if (!req.user) {
+      console.log('this is req.session', req.session)
       if (!req.session.order) {
+        console.log('session order doesnt exist')
         const order = await Order.create({
           status: 'cart'
         })
-        console.log(order.dataValues.id)
         req.session.order = order.dataValues.id
-        console.log(req.session.order, 'it not register')
-        const [orderProduct] = await OrderProduct.findAll({
-          where: {
-            orderId: req.session.order,
-            productId: req.body.productId,
-            purchasePrice: req.body.price
-          }
+        console.log('got here on session with', req.body, req.session.order)
+        const newOrderProduct = await OrderProduct.create({
+          orderId: req.session.order,
+          productId: req.body.productId,
+          purchasePrice: req.body.price,
+          quantity: req.body.quantity
         })
-        if (orderProduct) {
-          console.log('got here on session')
-          await orderProduct.update({
-            quantity: Sequelize.literal(`quantity+${req.body.quantity}`)
-          })
-        } else {
-          console.log('got here on session with', req.body, req.session.order)
-          const newOrderProduct = await OrderProduct.create({
-            orderId: req.session.order,
-            productId: req.body.productId,
-            purchasePrice: req.body.price,
-            quantity: req.body.quantity
-          })
-        }
+        res.status(200).end()
       } else {
         console.log('session order exists')
         const [orderProduct] = await OrderProduct.findAll({
@@ -114,6 +101,7 @@ router.post('/user/addToCart', async (req, res, next) => {
           await orderProduct.update({
             quantity: Sequelize.literal(`quantity+${req.body.quantity}`)
           })
+          res.status(204).end()
         } else {
           console.log('got here on session with', req.body, req.session.order)
           const newOrderProduct = await OrderProduct.create({
@@ -122,6 +110,7 @@ router.post('/user/addToCart', async (req, res, next) => {
             purchasePrice: req.body.price,
             quantity: req.body.quantity
           })
+          res.status(200).end()
         }
       }
     } else {
