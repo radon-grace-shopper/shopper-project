@@ -1,11 +1,9 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {fetchProducts} from '../store/allProductsReducer'
+
+import {Link} from 'react-router-dom'
 
 class adminDash extends React.Component {
-  componentDidMount() {
-    this.props.getProducts()
-  }
   render() {
     console.log('PROPS', this.props)
     if (!this.props.user.id) {
@@ -17,8 +15,14 @@ class adminDash extends React.Component {
           <h3>NOT AUTHORIZED</h3>
         ) : (
           <div>
-            <h3>Welcome to the admin dashboard</h3>
+            <nav>
+              <h3>Welcome to the admin dashboard</h3>
+              <Link to="/admin/products">Edit Products</Link>
+            </nav>
+
             {/* Link to editing products */}
+            {/* <AdminProducts products={this.props.products} /> */}
+
             {/* Link to editing users */}
           </div>
         )}
@@ -29,14 +33,14 @@ class adminDash extends React.Component {
 
 const mapState = state => {
   return {
-    user: state.user,
-    products: state.products
+    user: state.user
+    // products: state.products,
   }
 }
-const mapDispatch = dispatch => {
-  return {
-    getProducts: () => dispatch(fetchProducts())
-  }
-}
+// const mapDispatch = (dispatch) => {
+//   return {
+//     getProducts: () => dispatch(fetchProducts()),
+//   }
+// }
 
-export default connect(mapState, mapDispatch)(adminDash)
+export default connect(mapState)(adminDash)

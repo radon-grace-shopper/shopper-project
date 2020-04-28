@@ -6,7 +6,8 @@ import {Login, Signup, UserHome, CartView, CheckoutForm} from './components'
 import {me} from './store'
 import singleProduct from './components/single-product'
 import allProducts from './components/all-products'
-import adminDash from './components/adminDash'
+import adminDash from './components/adminViews/adminDash'
+import adminProducts from './components/adminViews/adminProducts'
 
 /**
  * COMPONENT
@@ -32,6 +33,7 @@ class Routes extends Component {
           <Switch>
             {/* Routes placed here are only available after logging in */}
             <Route path="/home" component={UserHome} />
+            <Route exact path="/admin/products" component={adminProducts} />
             <Route path="/admin" component={adminDash} />
           </Switch>
         )}
