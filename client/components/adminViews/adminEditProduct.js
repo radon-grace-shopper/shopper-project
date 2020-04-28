@@ -2,6 +2,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {Link} from 'react-router-dom'
 import {fetchProduct} from '../../store/singleProductReducer'
+import {modifyProduct, fetchProducts} from '../../store/allProductsReducer'
 
 class EditProduct extends React.Component {
   constructor() {
@@ -11,10 +12,11 @@ class EditProduct extends React.Component {
       description: '',
       price: '',
       inventory: '',
-      category: 'ice cream'
-      // clicked: false,
+      category: 'ice cream',
+      clicked: false
     }
     this.handleChange = this.handleChange.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
   }
   componentDidMount() {
     this.props.loadProduct(this.props.match.params.productId)
@@ -26,10 +28,40 @@ class EditProduct extends React.Component {
     })
   }
 
+  async handleSubmit(event) {
+    try {
+      event.preventDefault()
+      this.setState({clicked: true})
+      console.log('Edit pdt submit was clicked!')
+      const id = this.props.product.id
+      const name = this.state.name || this.props.product.name
+      const description =
+        this.state.description || this.props.product.description
+      const price = parseInt(this.state.price, 10) || this.props.product.price
+      const inventory =
+        parseInt(this.state.inventory, 10) || this.props.product.inventory
+      const category = this.state.category || this.props.product.category
+      const updatedProduct = {
+        id,
+        name,
+        description,
+        price,
+        inventory,
+        category
+      }
+      await this.props.updateProduct(updatedProduct)
+      await this.props.getProducts()
+      //update pdt will go here
+      // await this.props.loadProduct(this.props.match.params.productId)
+    } catch (error) {
+      console.log('Error Submitting edit to product', error)
+    }
+  }
+
   render() {
     console.log('edit form PROPS', this.props)
     return (
-      <form>
+      <form onSubmit={this.handleSubmit}>
         <h2>Edit Product Form</h2>
         <label htmlFor="id">id</label>
         <input name="id" placeholder={this.props.product.id} disabled />
@@ -79,6 +111,27 @@ class EditProduct extends React.Component {
         <Link to="/admin/products">
           <button type="button">Cancel</button>
         </Link>
+        <div>
+          {this.state.clicked ? (
+            <p>
+              Product was Updated!
+              <button
+                type="button"
+                onClick={() => {
+                  this.setState({clicked: false})
+                }}
+              >
+                x
+              </button>
+            </p>
+          ) : (
+            <p>
+              <button className="notVisible" type="button">
+                x
+              </button>
+            </p>
+          )}
+        </div>
       </form>
     )
   }
@@ -92,7 +145,9 @@ const mapState = state => {
 
 const mapDispatch = dispatch => {
   return {
-    loadProduct: id => dispatch(fetchProduct(id))
+    getProducts: () => dispatch(fetchProducts()),
+    loadProduct: id => dispatch(fetchProduct(id)),
+    updateProduct: pdt => dispatch(modifyProduct(pdt))
   }
 }
 
