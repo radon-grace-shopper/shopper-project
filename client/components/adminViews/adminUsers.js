@@ -2,6 +2,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {Link} from 'react-router-dom'
 import {fetchUsers, removeUser} from '../../store/users'
+import AdminEditUser from './adminEditUser'
 
 class adminUsers extends React.Component {
   constructor() {
@@ -22,6 +23,7 @@ class adminUsers extends React.Component {
       console.log('Error deleting user', err)
     }
   }
+
   render() {
     console.log('PROPS', this.props)
     return (
@@ -49,7 +51,9 @@ class adminUsers extends React.Component {
                     <tr key={user.id}>
                       <td>{user.id}</td>
                       <td>{user.email}</td>
-                      <td>{user.isAdmin ? <p>true</p> : <p>false</p>}</td>
+                      <td>
+                        <AdminEditUser user={user} />
+                      </td>
                       <td>
                         <button
                           type="button"
