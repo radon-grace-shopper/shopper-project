@@ -1,11 +1,26 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {Link} from 'react-router-dom'
-import {fetchUsers} from '../../store/users'
+import {fetchUsers, removeUser} from '../../store/users'
 
 class adminUsers extends React.Component {
+  constructor() {
+    super()
+    this.deleteUser = this.deleteUser.bind(this)
+  }
   componentDidMount() {
     this.props.loadUsers()
+  }
+
+  async deleteUser(event) {
+    const userId = event.target.value
+    console.log('delete was clicked on user', userId)
+    try {
+      await this.props.deleteUser(userId)
+      await this.props.loadUsers()
+    } catch (err) {
+      console.log('Error deleting user', err)
+    }
   }
   render() {
     console.log('PROPS', this.props)
@@ -19,13 +34,13 @@ class adminUsers extends React.Component {
             <table className="adminUsers">
               <thead>
                 <tr>
-                  <th colSpan="3">Users</th>
+                  <th colSpan="4">Users</th>
                 </tr>
                 <tr>
                   <th>Id</th>
                   <th>Email</th>
                   <th>isAdmin</th>
-                  {/* <th>Delete</th> */}
+                  <th>Delete</th>
                 </tr>
               </thead>
               <tbody>
@@ -35,7 +50,7 @@ class adminUsers extends React.Component {
                       <td>{user.id}</td>
                       <td>{user.email}</td>
                       <td>{user.isAdmin ? <p>true</p> : <p>false</p>}</td>
-                      {/* <td>
+                      <td>
                         <button
                           type="button"
                           value={user.id}
@@ -43,7 +58,7 @@ class adminUsers extends React.Component {
                         >
                           Delete
                         </button>
-                      </td> */}
+                      </td>
                     </tr>
                   )
                 })}
@@ -65,7 +80,8 @@ const mapState = state => {
 
 const mapDispatch = dispatch => {
   return {
-    loadUsers: () => dispatch(fetchUsers())
+    loadUsers: () => dispatch(fetchUsers()),
+    deleteUser: id => dispatch(removeUser(id))
   }
 }
 

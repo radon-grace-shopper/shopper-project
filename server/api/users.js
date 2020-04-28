@@ -16,3 +16,32 @@ router.get('/', isAdmin, async (req, res, next) => {
     next(err)
   }
 })
+
+router.put('/:id', async (req, res, next) => {
+  console.log('Reached PUT user route')
+  try {
+    const updatedUser = await User.update(req.body, {
+      where: {
+        id: req.params.id
+      }
+    })
+    res.json(updatedUser)
+    res.status(204).end()
+  } catch (err) {
+    next(err)
+  }
+})
+
+router.delete('/:id', isAdmin, async (req, res, next) => {
+  console.log('Reached DELETE user route')
+  try {
+    await User.destroy({
+      where: {
+        id: req.params.id
+      }
+    })
+    res.status(204).end()
+  } catch (err) {
+    next(err)
+  }
+})

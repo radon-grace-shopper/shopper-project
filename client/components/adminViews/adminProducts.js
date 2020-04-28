@@ -18,7 +18,7 @@ class AdminProducts extends React.Component {
       await this.props.destroyProduct(productId)
       await this.props.getProducts()
     } catch (err) {
-      console.log('Error deleting product', productId)
+      console.log('Error deleting product', err)
     }
   }
 
