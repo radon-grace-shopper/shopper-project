@@ -1,12 +1,13 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {fetchProducts} from '../../store/allProductsReducer'
+import {fetchProducts, removeProduct} from '../../store/allProductsReducer'
 import {Link} from 'react-router-dom'
 
 class AdminProducts extends React.Component {
   constructor() {
     super()
     this.onEdit = this.onEdit.bind(this)
+    this.deleteProduct = this.deleteProduct.bind(this)
   }
   componentDidMount() {
     this.props.getProducts()
@@ -14,6 +15,16 @@ class AdminProducts extends React.Component {
 
   onEdit(event) {
     // this.props.history.push(`/admin/products/edit/${event.target.value}`)
+  }
+
+  async deleteProduct(event) {
+    const productId = event.target.value
+    try {
+      await this.props.destroyProduct(productId)
+      await this.props.getProducts()
+    } catch (err) {
+      console.log('Error deleting product', productId)
+    }
   }
 
   render() {
@@ -56,7 +67,13 @@ class AdminProducts extends React.Component {
                     </Link>
                   </td>
                   <td>
-                    <button type="button">delete</button>
+                    <button
+                      type="button"
+                      value={pdt.id}
+                      onClick={this.deleteProduct}
+                    >
+                      Delete
+                    </button>
                   </td>
                 </tr>
               )
@@ -76,7 +93,8 @@ const mapState = state => {
 
 const mapDispatch = dispatch => {
   return {
-    getProducts: () => dispatch(fetchProducts())
+    getProducts: () => dispatch(fetchProducts()),
+    destroyProduct: id => dispatch(removeProduct(id))
   }
 }
 
