@@ -76,11 +76,12 @@ router.post('/user/addToCart', async (req, res, next) => {
         const order = await Order.create({
           status: 'cart'
         })
-        req.session.order = order
-        console.log(req.session)
+        console.log(order.dataValues.id)
+        req.session.order = order.dataValues.id
+        console.log(req.session.order, 'it not register')
         const [orderProduct] = await OrderProduct.findAll({
           where: {
-            orderId: req.session.order.id,
+            orderId: req.session.order,
             productId: req.body.productId,
             purchasePrice: req.body.price
           }
@@ -91,13 +92,9 @@ router.post('/user/addToCart', async (req, res, next) => {
             quantity: Sequelize.literal(`quantity+${req.body.quantity}`)
           })
         } else {
-          console.log(
-            'got here on session with',
-            req.body,
-            req.session.order.id
-          )
+          console.log('got here on session with', req.body, req.session.order)
           const newOrderProduct = await OrderProduct.create({
-            orderId: req.session.order.id,
+            orderId: req.session.order,
             productId: req.body.productId,
             purchasePrice: req.body.price,
             quantity: req.body.quantity
@@ -107,7 +104,7 @@ router.post('/user/addToCart', async (req, res, next) => {
         console.log('session order exists')
         const [orderProduct] = await OrderProduct.findAll({
           where: {
-            orderId: req.session.order.id,
+            orderId: req.session.order,
             productId: req.body.productId,
             purchasePrice: req.body.price
           }
@@ -118,13 +115,9 @@ router.post('/user/addToCart', async (req, res, next) => {
             quantity: Sequelize.literal(`quantity+${req.body.quantity}`)
           })
         } else {
-          console.log(
-            'got here on session with',
-            req.body,
-            req.session.order.id
-          )
+          console.log('got here on session with', req.body, req.session.order)
           const newOrderProduct = await OrderProduct.create({
-            orderId: req.session.order.id,
+            orderId: req.session.order,
             productId: req.body.productId,
             purchasePrice: req.body.price,
             quantity: req.body.quantity
