@@ -35,6 +35,7 @@ router.put('/:orderId', async (req, res, next) => {
         orderId: req.params.orderId
       }
     })
+    req.session.order = 0
     res.json(updatedProduct)
   } catch (err) {
     next(err)

@@ -57,6 +57,9 @@ router.put('/:id', async (req, res, next) => {
         id: req.params.id
       }
     })
+    if (req.session.order) {
+      req.session.order = 0
+    }
     res.json(updatedOrder)
     res.status(204).end()
   } catch (err) {
