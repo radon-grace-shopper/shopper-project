@@ -26,17 +26,24 @@ class CartView extends Component {
   async definingUser() {
     const holdUp = await this.props.me()
     if (this.props.user.id) {
+      console.log('there is a user')
       await this.props.getSessionOrders()
       if (this.props.cart.products) {
+        console.log('products after session cart obtained')
         const sessionOrder = this.props.cart.id
         await this.props.getOrders(this.props.user.id)
-        const userOrder = this.props.cart.id
-        await formatData(sessionOrder, userOrder)
-        await this.props.getOrders(this.props.user.id)
+        if (this.props.cart.products) {
+          console.log('products after user cart obtained')
+          const userOrder = this.props.cart.id
+          await formatData(sessionOrder, userOrder)
+          await this.props.getOrders(this.props.user.id)
+        }
       } else {
+        console.log('nothing on session')
         await this.props.getOrders(this.props.user.id)
       }
     } else {
+      console.log('no user')
       await this.props.getSessionOrders()
     }
   }

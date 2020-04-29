@@ -41,8 +41,9 @@ export async function formatData(sessionVal, userOrderVal) {
   const {data} = await axios.get(`/api/orderProducts/${sessionVal}`)
   const sendUpdate = {orderId: userOrderVal}
   const resTwo = await axios.put(`/api/orderProducts/${sessionVal}`, sendUpdate)
-
-  await axios.put(`/api/orders/${sessionVal}`, {status: 'completed'})
+  if (sessionVal !== userOrderVal) {
+    await axios.put(`/api/orders/${sessionVal}`, {status: 'completed'})
+  }
 }
 
 export const getOrders = id => {
