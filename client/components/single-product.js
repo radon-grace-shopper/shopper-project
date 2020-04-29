@@ -3,7 +3,6 @@ import {connect} from 'react-redux'
 import {fetchProduct} from '../store/singleProductReducer'
 import axios from 'axios'
 import AddToCart from './addToCart'
-const faker = require('faker')
 
 class singleProduct extends React.Component {
   constructor() {
