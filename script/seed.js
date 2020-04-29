@@ -8,6 +8,12 @@ async function seed() {
   await db.sync({force: true})
   console.log('db synced!')
 
+  await User.create({
+    email: 'admin@email.com',
+    password: '1234',
+    isAdmin: true
+  })
+
   const user = await User.create({
     username: faker.internet.userName(),
     email: faker.internet.email(),
@@ -21,7 +27,7 @@ async function seed() {
   const product = await Product.create({
     name: faker.commerce.productName(),
     description: faker.lorem.paragraph(),
-    imageUrl: faker.image.food(),
+    // imageUrl: faker.image.food(),
     price: faker.commerce.price(),
     inventory: faker.random.number(),
     category: 'ice cream'
@@ -30,25 +36,40 @@ async function seed() {
   user.setOrders(order)
   product.setOrders([order], {through: {quantity: 50}})
 
-  await Review.bulkCreate([
-    {
-      content: 'This product is awesome. Would totally buy it again.',
-      rating: 5
-    },
-    {
-      content:
-        "I don't know what that other review is talking about?! This tastes gross",
-      rating: 0
-    },
-    {content: 'It was so-so', rating: 3}
-  ])
+  const review = await Review.create({
+    content: 'This product is something else',
+    rating: 4
+  })
 
-  for (let i = 0; i < 100; i++) {
-    await User.create({
-      username: faker.internet.userName(),
-      email: faker.internet.email(),
-      password: faker.internet.password()
-    })
+  user.setReviews(review)
+  product.setReviews(review)
+
+  // const reviews = await Review.bulkCreate([
+  //   {
+  //     content: 'This product is awesome. Would totally buy it again.',
+  //     rating: 5,
+  //   },
+  //   {
+  //     content:
+  //       "I don't know what that other review is talking about?! This tastes gross",
+  //     rating: 0,
+  //   },
+  //   {content: 'It was so-so', rating: 3},
+  // ])
+  // user.setReviews(review[0])
+  // user.setReviews(review[1])
+  // user.setReviews(review[2])
+  // product.setReviews(review[0])
+  // product.setReviews(review[1])
+  // product.setReviews(review[2])
+
+  // reviews.forEach((rvw) => {
+  //   user.setReviews(rvw)
+  //   product.setReviews(rvw)
+  // })
+
+  //Making pdts in diff categories
+  for (let i = 0; i < 50; i++) {
     await Product.create({
       name: faker.commerce.productName(),
       description: faker.lorem.paragraph(),
@@ -57,7 +78,45 @@ async function seed() {
       inventory: faker.random.number(),
       category: 'ice cream'
     })
+    await Product.create({
+      name: faker.commerce.productName(),
+      description: faker.lorem.paragraph(),
+      // imageUrl: faker.image.food(),
+      price: faker.commerce.price(),
+      inventory: faker.random.number(),
+      category: 'healthy'
+    })
+    await Product.create({
+      name: faker.commerce.productName(),
+      description: faker.lorem.paragraph(),
+      // imageUrl: faker.image.food(),
+      price: faker.commerce.price(),
+      inventory: faker.random.number(),
+      category: 'dairy-free'
+    })
   }
+  let users = []
+  for (let i = 0; i < 100; i++) {
+    users.push(
+      await User.create({
+        username: faker.internet.userName(),
+        email: faker.internet.email(),
+        password: faker.internet.password()
+      })
+    )
+  }
+
+  // users.forEach((user) => {
+  //   try {
+  //     let review = Review.create({
+  //       content: faker.lorem.paragraph(),
+  //       rating: faker.random.number({min: 0, max: 5}),
+  //     })
+  //     user.setReviews(review)
+  //   } catch (err) {
+  //     console.log(err)
+  //   }
+  // })
 
   console.log(`seeded successfully`)
 }

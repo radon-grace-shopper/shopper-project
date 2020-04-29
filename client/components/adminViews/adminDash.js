@@ -15,7 +15,7 @@ class AdminDash extends React.Component {
         ) : (
           <div>
             <nav>
-              <h3>Welcome to the admin dashboard</h3>
+              <h3>Welcome to the Admin Dashboard</h3>
               <Link to="/admin/products">Edit Products</Link>
               <Link to="/admin/users">Edit Users</Link>
             </nav>
