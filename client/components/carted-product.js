@@ -10,7 +10,6 @@ class CartedProduct extends Component {
     this.handleChange = this.handleChange.bind(this)
   }
   componentDidMount() {
-    console.log(this.props)
     this.setState({
       quant: this.props.products.orderProduct.quantity
     })
@@ -25,7 +24,6 @@ class CartedProduct extends Component {
     )
   }
   render() {
-    console.log(this.state.quant)
     const product = this.props.products
     if (this.props.products) {
       return (

@@ -25,7 +25,6 @@ class singleProduct extends React.Component {
   async handleSubmit(event) {
     try {
       event.preventDefault()
-      //Creating new review
       let content = this.state.content
       let rating = this.state.rating
       let userId = this.props.user.id

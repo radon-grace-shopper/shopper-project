@@ -25,7 +25,6 @@ router.get('/:orderId', async (req, res, next) => {
 })
 router.put('/:orderId', async (req, res, next) => {
   try {
-    console.log('hitting the put route with', req.body)
     await OrderProduct.update(req.body, {
       where: {
         orderId: req.params.orderId
@@ -44,7 +43,6 @@ router.put('/:orderId', async (req, res, next) => {
 
 router.put('/:orderId/:productId', async (req, res, next) => {
   try {
-    console.log('hitting the put route with', req.body)
     await OrderProduct.update(req.body, {
       where: {
         orderId: req.params.orderId,
