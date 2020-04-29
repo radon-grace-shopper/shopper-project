@@ -4,7 +4,8 @@ import {
   deleteOrder,
   getOrders,
   updateQuantity,
-  getSessionOrders
+  getSessionOrders,
+  formatData
 } from '../store/cart'
 
 import {me} from '../store/user'
@@ -19,78 +20,50 @@ class CartView extends Component {
     this.definingUser = this.definingUser.bind(this)
   }
   componentDidMount() {
-    console.log(this.props.user)
-    if (this.props.user.id) {
-      console.log('ran the if')
-      this.props.getOrders(this.props.user.id)
-    } else {
-      console.log('we ran this')
-      this.definingUser()
-      // console.log('already ran getOrders')
-    }
+    this.definingUser()
   }
+
   async definingUser() {
     const holdUp = await this.props.me()
     if (this.props.user.id) {
-      console.log('getting user orders')
-      this.props.getOrders(this.props.user.id)
+      console.log('there is a user')
+      await this.props.getSessionOrders()
+      if (this.props.cart.products) {
+        console.log('products after session cart obtained')
+        const sessionOrder = this.props.cart.id
+        await this.props.getOrders(this.props.user.id)
+        if (this.props.cart.products) {
+          console.log('products after user cart obtained')
+          const userOrder = this.props.cart.id
+          await formatData(sessionOrder, userOrder)
+          await this.props.getOrders(this.props.user.id)
+        }
+      } else {
+        console.log('nothing on session')
+        await this.props.getOrders(this.props.user.id)
+      }
     } else {
-      console.log('got to requesting session')
-      this.props.getSessionOrders()
+      console.log('no user')
+      await this.props.getSessionOrders()
     }
   }
 
   render() {
-    // console.log('this is props.cart', this.props.cart)
     if (!this.props.cart.products) {
-      // console.log('got here')
       return (
         <div className="spinner-border text-primary" role="status">
           <h3 className="sr-only">loading</h3>
         </div>
       )
     } else {
-      // console.log(
-      //   'broke the rules and got here even though this.props.cart:',
-      //   this.props.cart
-      // )
-
       return (
         <div className="container">
           <div key={this.props.cart.id}>
             {this.props.cart.products.map(product => (
               <CartedProduct key={product.id} products={product} />
-              // <div key={product.id}>
-              //   <h2>Name: {product.name}</h2>
-              //   <p>Description:{product.description}</p>
-              //   <img className="defaultIceCream" src={product.imageUrl} />
-              //   <br />
-              //   <a>Single Price: {product.price}</a>
-              //   <label htmlFor="quantity">Quantity:</label>
-              //   <input
-              //     type="number"
-              //     id="quantity"
-              //     value={Number(product.orderProduct.quantity)}
-              //     onChange={this.handleChange}
-              //   />
-              //   <br />
-              //   <a>
-              //     Total Price: {product.orderProduct.quantity * product.price}
-              //   </a>
-              //   <br />
-              //   <button
-              //     type="button"
-              //     onClick={() => this.props.deleteOrder(order)}
-              //   >
-              //     Remove
-              //   </button>
-              //   <hr />
-              // </div>
             ))}
           </div>
-          <Link className="btn btn-primary btn-lg" to="/checkout">
-            Checkout
-          </Link>
+          <Link to="/checkout">Checkout</Link>
         </div>
       )
     }
