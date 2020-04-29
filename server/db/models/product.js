@@ -26,7 +26,7 @@ const Product = db.define('product', {
   },
   imageUrl: {
     type: Sequelize.STRING,
-    defaultValue: 'iceCreamDefault.jpg',
+    defaultValue: '/iceCreamDefault.jpg',
     validate: {
       isUrl: true
     }

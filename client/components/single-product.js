@@ -3,6 +3,7 @@ import {connect} from 'react-redux'
 import {fetchProduct} from '../store/singleProductReducer'
 import axios from 'axios'
 import AddToCart from './addToCart'
+const faker = require('faker')
 
 class singleProduct extends React.Component {
   constructor() {
@@ -38,7 +39,7 @@ class singleProduct extends React.Component {
       }
       await axios.post('/api/reviews', newReview)
 
-      this.props.loadProduct(productId)
+      await this.props.loadProduct(productId)
       this.setState({
         content: '',
         rating: 0
@@ -69,13 +70,13 @@ class singleProduct extends React.Component {
         </div>
       )
     }
-
+    console.log('PROPS', this.props)
     return (
       <div className="container">
         <br />
         <div className="jumbotron">
           <h2>{this.props.product.name}</h2>
-          <img className="defaultIceCream" src={this.props.product.imageUrl} />
+          <img className="defaultIceCream" src="/iceCreamDefault.jpg" />
           <div>${this.props.product.price}</div>
           <p>{this.props.product.description}</p>
           <a>Average Rating: {this.calculateReviews()}</a>
