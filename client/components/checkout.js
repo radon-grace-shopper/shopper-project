@@ -12,10 +12,24 @@ class Checkout extends Component {
       name: '',
       email: '',
       address: '',
-      completed: false
+      completed: false,
+      outOfStock: [],
+      error: false
     }
     this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
+  }
+
+  componentDidMount() {
+    if (this.props.cart.products) {
+      this.props.cart.products.forEach(product => {
+        if (product.inventory === 0) {
+          this.setState(prevState => ({
+            outOfStock: [...prevState.outOfStock, product]
+          }))
+        }
+      })
+    }
   }
 
   handleChange(event) {
@@ -26,7 +40,6 @@ class Checkout extends Component {
 
   async handleSubmit() {
     event.preventDefault()
-    this.setState({completed: true})
 
     const {stripe, elements} = this.props
 
@@ -36,31 +49,36 @@ class Checkout extends Component {
       return
     }
 
-    this.props.cart.status = 'completed'
-    this.props.cart.products.map(product => {
-      product.inventory -= product.orderProduct.quantity
-      return product
-    })
-
     this.props.checkout(this.props.cart)
 
-    // const {data} = await axios.get('/secret')
-    // console.log(data)
+    var response = await axios.get('/secret')
 
-    // const result = await stripe.confirmCardPayment(data.client_secret, {
-    //   paymentMethod: {
-    //     card: elements.getElement(CardElement),
-    //     billingDetails: {
-    //       name: 'Jenny Rosen',
-    //     },
-    //   },
-    // })
+    const result = await stripe.confirmCardPayment(
+      response.data.client_secret,
+      {
+        payment_method: {
+          card: elements.getElement(CardElement),
+          billing_details: {
+            name: this.state.name,
+            address: this.state.address,
+            email: this.state.email
+          }
+        }
+      }
+    )
 
-    // if (result.error) {
-    //   console.log('[error]')
-    // } else {
-    //   console.log('success')
-    // }
+    if (result.error) {
+      this.setState({error: true})
+      console.log('[error]')
+    } else {
+      this.setState({completed: true})
+      this.props.cart.status = 'completed'
+      this.props.cart.products.map(product => {
+        product.inventory -= product.orderProduct.quantity
+        return product
+      })
+      this.setState({completed: true})
+    }
   }
 
   render() {
@@ -112,11 +130,37 @@ class Checkout extends Component {
           />
           <button
             type="submit"
-            disabled={!this.props.stripe}
+            disabled={
+              !this.props.stripe ||
+              this.props.cart.products === undefined ||
+              this.state.outOfStock.length
+            }
             className="btn btn-primary"
           >
             Pay
           </button>
+
+          {this.state.error ? (
+            <a className="alert alert-primary" role="alert">
+              Your payment was not accepted
+            </a>
+          ) : null}
+
+          {this.state.outOfStock.length ? (
+            <div>
+              {this.state.outOfStock.map(product => (
+                <a
+                  key={product.id}
+                  className="alert alert-primary"
+                  role="alert"
+                >
+                  {product.name} is out of stock please edit your cart and try
+                  again.
+                </a>
+              ))}
+            </div>
+          ) : null}
+
           {this.state.completed ? (
             <div className="alert alert-primary" role="alert">
               Order Complete <Link to="/home">Return Home</Link>
