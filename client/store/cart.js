@@ -63,7 +63,7 @@ export const checkout = order => {
     try {
       await axios.put(`/api/orders/${order.id}`, order)
       order.products.forEach(async product => {
-        // product.checked = true
+        product.checked = true
         await axios.put(`/api/products/${product.id}`, product)
       })
       dispatch(completeOrder(order))

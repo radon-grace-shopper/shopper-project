@@ -1,6 +1,6 @@
 const router = require('express').Router()
 const {Product, Review, User} = require('../db/models')
-const {isAdmin} = require('./middleware')
+const {isAdmin, isCheckoutOrAdmin} = require('./middleware')
 module.exports = router
 
 router.get('/', async (req, res, next) => {
@@ -23,7 +23,7 @@ router.get('/:id', async (req, res, next) => {
   }
 })
 
-router.put('/:id', isAdmin, async (req, res, next) => {
+router.put('/:id', isCheckoutOrAdmin, async (req, res, next) => {
   try {
     const updatedProduct = await Product.update(req.body, {
       where: {
