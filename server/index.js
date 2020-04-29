@@ -64,9 +64,9 @@ const createApp = () => {
   app.use(passport.session())
 
   // auth and api routes
-  app.use('/secret', require('./stripe'))
   app.use('/auth', require('./auth'))
   app.use('/api', require('./api'))
+  app.use('/secret', require('./stripe'))
 
   // static file-serving middleware
   app.use(express.static(path.join(__dirname, '..', 'public')))

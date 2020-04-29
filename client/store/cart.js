@@ -26,10 +26,6 @@ export const getSessionOrders = () => {
     try {
       const {data} = await axios.get(`/api/orders/session`)
       const [destructuredData] = data
-      console.log(
-        'this is destructured data in session orders',
-        destructuredData
-      )
       dispatch(setOrders(destructuredData))
     } catch (err) {
       console.log('ERROR GETTING SESSION ORDERS', err)
@@ -41,12 +37,21 @@ const completeOrder = order => ({
   order
 })
 
+export async function formatData(sessionVal, userOrderVal) {
+  const {data} = await axios.get(`/api/orderProducts/${sessionVal}`)
+  const sendUpdate = {orderId: userOrderVal}
+  const resTwo = await axios.put(`/api/orderProducts/${sessionVal}`, sendUpdate)
+  if (sessionVal !== userOrderVal) {
+    await axios.put(`/api/orders/${sessionVal}`, {status: 'completed'})
+  }
+}
+
 export const getOrders = id => {
   return async dispatch => {
     try {
-      const {data} = await axios.get(`/api/orders/user/${id}`)
+      const res = await axios.get(`/api/orders/user/${id}`)
+      const {data} = res
       const [destructuredData] = data
-      console.log('this is destructured data in user orders', destructuredData)
       dispatch(setOrders(destructuredData))
     } catch (err) {
       console.log('ERROR GETTING ORDERS', err)
@@ -59,6 +64,7 @@ export const checkout = order => {
     try {
       await axios.put(`/api/orders/${order.id}`, order)
       order.products.forEach(async product => {
+        product.checked = true
         await axios.put(`/api/products/${product.id}`, product)
       })
       dispatch(completeOrder(order))
@@ -80,14 +86,12 @@ export const deleteOrder = (orderId, productId) => {
 }
 
 export const updateQuantity = (orderProduct, quantity) => {
-  // console.log(orderProduct, quantity)
   return async dispatch => {
     try {
       const {data} = await axios.put(
         `/api/orderProducts/${orderProduct.orderId}/${orderProduct.productId}`,
         {quantity: quantity}
       )
-      // console.log(data)
       dispatch(updateQuantityAction(data))
     } catch (err) {
       console.log('ERROR UPDATING QUANTITY', err)
@@ -104,7 +108,6 @@ export default function(state = {}, action) {
         return {}
       }
     case DELETE_ORDER:
-      // return state.map(order => {
       return {
         ...state,
         products: state.products.filter(
@@ -113,17 +116,6 @@ export default function(state = {}, action) {
       }
 
     case UPDATE_QUANTITY:
-      // const testproducts = state.products.map((product) => {
-      //   if (product.id === action.orderProduct.productId) {
-      //     return {
-      //       ...product,
-      //       orderProduct: action.orderProduct,
-      //     }
-      //   } else {
-      //     return product
-      //   }
-      // })
-      // console.log(testproducts)
       return {
         ...state,
         products: state.products.map(product => {

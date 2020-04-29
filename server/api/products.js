@@ -1,6 +1,6 @@
 const router = require('express').Router()
 const {Product, Review, User} = require('../db/models')
-const {isAdmin} = require('./middleware')
+const {isAdmin, isCheckoutOrAdmin} = require('./middleware')
 module.exports = router
 
 router.get('/', async (req, res, next) => {
@@ -23,7 +23,7 @@ router.get('/:id', async (req, res, next) => {
   }
 })
 
-router.put('/:id', isAdmin, async (req, res, next) => {
+router.put('/:id', isCheckoutOrAdmin, async (req, res, next) => {
   try {
     const updatedProduct = await Product.update(req.body, {
       where: {
@@ -38,7 +38,6 @@ router.put('/:id', isAdmin, async (req, res, next) => {
 })
 
 router.delete('/:id', isAdmin, async (req, res, next) => {
-  console.log('Reached product DELETE route')
   try {
     await Product.destroy({
       where: {
@@ -52,7 +51,6 @@ router.delete('/:id', isAdmin, async (req, res, next) => {
 })
 
 router.post('/', isAdmin, async (req, res, next) => {
-  console.log('Reaching POST product route')
   try {
     const newProduct = await Product.create({
       name: req.body.name,
